@@ -26,13 +26,13 @@ git status --short
 
 要求：
 
-- `pwd` 与 `git rev-parse --show-toplevel` 必须指向同一个仓库根目录：`/Users/vita/Vitemis/Kuzio`。
+- `pwd` 与 `git rev-parse --show-toplevel` 必须指向同一个仓库根目录：`/Users/vita/Vitemis/Virgo/Kuzio`。
 - 如果当前目录不是 Git root，停止修改，只报告路径问题。
 - 读取 `git status --short` 后，先区分用户已有改动与本轮计划改动；不得覆盖、回退或清理用户已有改动。
 
 ## 修改边界
 
-本仓库当前是尚未确定产品范围、目标平台和技术栈的新建第一方项目。未来常规任务可以按用户要求修改业务源码；但在只要求项目自查或文档更新的任务中，只允许修改：
+本仓库当前已确认首个产品面：macOS 26 SwiftUI 通用层级资料库前端。未来常规任务可以按用户要求修改业务源码；但在只要求项目自查或文档更新的任务中，只允许修改：
 
 - `AGENTS.md`
 - `CLAUDE.md`
@@ -72,8 +72,13 @@ git status --short
 
 修改前至少确认：
 
-- target 和入口：当前 `UNKNOWN`；仓库尚无业务源码、工程清单或可执行入口。
-- 关键链路：当前不存在已实现的业务链路。
+- 产品 target：macOS 26 `Kuzio` App；入口为 `Sources/KuzioApp/KuzioApp.swift`。
+- 工程：`Package.swift` 提供 SwiftPM executable/test 入口；`project.yml` 通过本机 XcodeGen 2.45.4 生成 `Kuzio.xcodeproj` 正式 App target。
+- UI 链路：`KuzioApp` → `LibraryRootView` → 系统两列 `NavigationSplitView` → `LibraryBrowserPage` / `LibraryReaderView` / `LibraryTrashView`。
+- 数据链路：`LibraryBootstrap` → actor `LibraryStore` → versioned `manifest.json` + UUID payload objects → `LibrarySnapshot` → `LibraryViewModel` → 任意深度 folder/document 投影；DEBUG-only `-KuzioPreviewData` seed 不是 production fallback。
+- UI 禁区：不引入品牌色、自定义渐变、自绘玻璃、胶囊、装饰性阴影或自制图标；只使用系统语义表面、SF Symbols、`NSWorkspace` 原生文件图标与 Apple 原生 Liquid Glass API。
+- 字体：拉丁字母、数字与技术文本使用随 App 分发的官方 JetBrains Mono `v2.304` 四档静态字体；中文由系统字体级联回退为苹方。字体注册、checksum、许可证与 fail-closed 合同见 `docs/FONT_DEPENDENCY.md`。
+- macOS 圆形图标按钮：按 Rokurics Mac 源码保持 36pt control / 15pt SF Symbol；不得误用共享移动端的 44pt / 18pt 指标，也不得退回只有 glyph 大小的默认小按钮。
 - 任何新建工程、模块、入口或依赖都必须来自用户明确需求，并同步更新 `docs/PROJECT_MAP.md`、`docs/ARCHITECTURE.md`、`docs/CURRENT_STATE.md`、`docs/DO_NOT_BREAK.md` 与 `docs/TESTING.md` 中受影响的事实。
 
 不确定的模块必须标注 `UNKNOWN` 或 `需要后续确认`，不要编造。

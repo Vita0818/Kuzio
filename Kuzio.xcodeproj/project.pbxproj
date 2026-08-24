@@ -1,0 +1,406 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		0881F624FD5965FBBE9CF2D5 /* LibraryPackagePaths.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41BA10A605D102CAB55F0171 /* LibraryPackagePaths.swift */; };
+		09902039B18C6E03C69D3F31 /* LibraryOperationSheets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 333399B70E1AFB9FFB45E37A /* LibraryOperationSheets.swift */; };
+		146F44E186C2070AFDCA9AC1 /* Fonts in Resources */ = {isa = PBXBuildFile; fileRef = 1D4C926801537271FDBEAB9C /* Fonts */; };
+		244288AE872FFFC17C643247 /* LibraryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB46334F678F58CE246484E4 /* LibraryViewModel.swift */; };
+		35279A9AB294C1C8FB36339E /* LibraryStoreError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0023136858A6D6F6DEB15D7D /* LibraryStoreError.swift */; };
+		380499B089D6DB284E866380 /* LibraryBrowserView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AFE098CDDAB8CE75A20B201 /* LibraryBrowserView.swift */; };
+		538755033A00A466DBE3DFE8 /* LibraryManifest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E69C2E96AEFF4A0FCFE8C1E6 /* LibraryManifest.swift */; };
+		5F4EB9C476EA3BF056D05E3B /* KuzioControlMetrics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AFCDDE12761A69591B5E251 /* KuzioControlMetrics.swift */; };
+		65AAFBB4C146480F70EF52A1 /* LibraryBootstrap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A05E012F795993B64695CB1 /* LibraryBootstrap.swift */; };
+		6A88B9AADE67C942EC658C2F /* LibraryRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EFF0E3136857D7A389726CF /* LibraryRootView.swift */; };
+		7D3D09C60B8E10C8E62BBAC2 /* LibraryStoreIO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25E8B51DA2ABF426B3B16625 /* LibraryStoreIO.swift */; };
+		7E1E0962632B241D10695133 /* LibraryIdentifiers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 085E3B6101BE2DA00F962CFA /* LibraryIdentifiers.swift */; };
+		8C809D48BCE1904AAEF4A7ED /* LibraryReaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE819D9043DC15FAAD1BA5A7 /* LibraryReaderView.swift */; };
+		B77E7B53D56EC1C60C729953 /* LibraryNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1ABF06AB9E98473C2FBA4EA /* LibraryNode.swift */; };
+		BBA1FFA85C5233A55E83D4EF /* SystemFileIconProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3817D544A3EB80A470110C0D /* SystemFileIconProvider.swift */; };
+		BCABAE5281493808F37E34D9 /* KuzioApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7E19927AC3E2795BF8B4065 /* KuzioApp.swift */; };
+		D380CA0E9D31845CA14E9E5A /* LibraryStore+Mutations.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD14FAE8F013AA0F6FA089E7 /* LibraryStore+Mutations.swift */; };
+		ECA92D627268E93359536B04 /* LibraryTrashView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F05A633BBFE11368DB114F55 /* LibraryTrashView.swift */; };
+		F51C04E7EC555DCE892B4FA3 /* LibraryManifestValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF9A7DED6FC10136DA74FC7 /* LibraryManifestValidator.swift */; };
+		F593CB4C99C6D2976FFC900C /* LibraryStore+Transactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D84B5D5E921E7A80EC733BC1 /* LibraryStore+Transactions.swift */; };
+		FD97E11CDBE721CEC70B79BF /* KuzioTypography.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13792CEA9B9B6C345F0A3B0D /* KuzioTypography.swift */; };
+		FDA81E2EDFCE586F25790886 /* LibraryStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D6AC849ED763D1727DB6DDF /* LibraryStore.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		0023136858A6D6F6DEB15D7D /* LibraryStoreError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryStoreError.swift; sourceTree = "<group>"; };
+		085E3B6101BE2DA00F962CFA /* LibraryIdentifiers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryIdentifiers.swift; sourceTree = "<group>"; };
+		0EFF0E3136857D7A389726CF /* LibraryRootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryRootView.swift; sourceTree = "<group>"; };
+		13792CEA9B9B6C345F0A3B0D /* KuzioTypography.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KuzioTypography.swift; sourceTree = "<group>"; };
+		1AFCDDE12761A69591B5E251 /* KuzioControlMetrics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KuzioControlMetrics.swift; sourceTree = "<group>"; };
+		1D4C926801537271FDBEAB9C /* Fonts */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Fonts; path = Sources/KuzioApp/Fonts; sourceTree = SOURCE_ROOT; };
+		25E8B51DA2ABF426B3B16625 /* LibraryStoreIO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryStoreIO.swift; sourceTree = "<group>"; };
+		333399B70E1AFB9FFB45E37A /* LibraryOperationSheets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryOperationSheets.swift; sourceTree = "<group>"; };
+		3817D544A3EB80A470110C0D /* SystemFileIconProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemFileIconProvider.swift; sourceTree = "<group>"; };
+		3D6AC849ED763D1727DB6DDF /* LibraryStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryStore.swift; sourceTree = "<group>"; };
+		3DF9A7DED6FC10136DA74FC7 /* LibraryManifestValidator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryManifestValidator.swift; sourceTree = "<group>"; };
+		41BA10A605D102CAB55F0171 /* LibraryPackagePaths.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryPackagePaths.swift; sourceTree = "<group>"; };
+		4A28A9331925C0C9848FD5AD /* Kuzio.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Kuzio.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		5AFE098CDDAB8CE75A20B201 /* LibraryBrowserView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryBrowserView.swift; sourceTree = "<group>"; };
+		9A05E012F795993B64695CB1 /* LibraryBootstrap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryBootstrap.swift; sourceTree = "<group>"; };
+		B1ABF06AB9E98473C2FBA4EA /* LibraryNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryNode.swift; sourceTree = "<group>"; };
+		C7E19927AC3E2795BF8B4065 /* KuzioApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KuzioApp.swift; sourceTree = "<group>"; };
+		CE819D9043DC15FAAD1BA5A7 /* LibraryReaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryReaderView.swift; sourceTree = "<group>"; };
+		D84B5D5E921E7A80EC733BC1 /* LibraryStore+Transactions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LibraryStore+Transactions.swift"; sourceTree = "<group>"; };
+		DD14FAE8F013AA0F6FA089E7 /* LibraryStore+Mutations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LibraryStore+Mutations.swift"; sourceTree = "<group>"; };
+		E69C2E96AEFF4A0FCFE8C1E6 /* LibraryManifest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryManifest.swift; sourceTree = "<group>"; };
+		F05A633BBFE11368DB114F55 /* LibraryTrashView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryTrashView.swift; sourceTree = "<group>"; };
+		FB46334F678F58CE246484E4 /* LibraryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryViewModel.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		06BEEBF7E30BEFEE5E1CA005 = {
+			isa = PBXGroup;
+			children = (
+				E526986F740F357D11548EA6 /* Sources */,
+				4BB2C793BD06E6BFC43D5455 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		4BB2C793BD06E6BFC43D5455 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				4A28A9331925C0C9848FD5AD /* Kuzio.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		5B52D9E8CBC81B3CD89793A8 /* KuzioApp */ = {
+			isa = PBXGroup;
+			children = (
+				1D4C926801537271FDBEAB9C /* Fonts */,
+				C7E19927AC3E2795BF8B4065 /* KuzioApp.swift */,
+				1AFCDDE12761A69591B5E251 /* KuzioControlMetrics.swift */,
+				13792CEA9B9B6C345F0A3B0D /* KuzioTypography.swift */,
+				5AFE098CDDAB8CE75A20B201 /* LibraryBrowserView.swift */,
+				B1ABF06AB9E98473C2FBA4EA /* LibraryNode.swift */,
+				333399B70E1AFB9FFB45E37A /* LibraryOperationSheets.swift */,
+				CE819D9043DC15FAAD1BA5A7 /* LibraryReaderView.swift */,
+				0EFF0E3136857D7A389726CF /* LibraryRootView.swift */,
+				F05A633BBFE11368DB114F55 /* LibraryTrashView.swift */,
+				FB46334F678F58CE246484E4 /* LibraryViewModel.swift */,
+				3817D544A3EB80A470110C0D /* SystemFileIconProvider.swift */,
+				D5C7C6EFBA96AB9D06A5E1FE /* LibraryStorage */,
+			);
+			path = KuzioApp;
+			sourceTree = "<group>";
+		};
+		D5C7C6EFBA96AB9D06A5E1FE /* LibraryStorage */ = {
+			isa = PBXGroup;
+			children = (
+				9A05E012F795993B64695CB1 /* LibraryBootstrap.swift */,
+				085E3B6101BE2DA00F962CFA /* LibraryIdentifiers.swift */,
+				E69C2E96AEFF4A0FCFE8C1E6 /* LibraryManifest.swift */,
+				3DF9A7DED6FC10136DA74FC7 /* LibraryManifestValidator.swift */,
+				41BA10A605D102CAB55F0171 /* LibraryPackagePaths.swift */,
+				3D6AC849ED763D1727DB6DDF /* LibraryStore.swift */,
+				DD14FAE8F013AA0F6FA089E7 /* LibraryStore+Mutations.swift */,
+				D84B5D5E921E7A80EC733BC1 /* LibraryStore+Transactions.swift */,
+				0023136858A6D6F6DEB15D7D /* LibraryStoreError.swift */,
+				25E8B51DA2ABF426B3B16625 /* LibraryStoreIO.swift */,
+			);
+			path = LibraryStorage;
+			sourceTree = "<group>";
+		};
+		E526986F740F357D11548EA6 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				5B52D9E8CBC81B3CD89793A8 /* KuzioApp */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		7733B0F944E7E9417C543567 /* Kuzio */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C3F6FA12AD6CED5DFD17440D /* Build configuration list for PBXNativeTarget "Kuzio" */;
+			buildPhases = (
+				C51F3F621870EBD7759A91FE /* Sources */,
+				1BAA6C7866FE961798F27507 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Kuzio;
+			packageProductDependencies = (
+			);
+			productName = Kuzio;
+			productReference = 4A28A9331925C0C9848FD5AD /* Kuzio.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		BAAB69486D864E195C833179 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					7733B0F944E7E9417C543567 = {
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = 0FB3D0D0ABA7B1C3EE476B7D /* Build configuration list for PBXProject "Kuzio" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 06BEEBF7E30BEFEE5E1CA005;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 4BB2C793BD06E6BFC43D5455 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				7733B0F944E7E9417C543567 /* Kuzio */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		1BAA6C7866FE961798F27507 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				146F44E186C2070AFDCA9AC1 /* Fonts in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		C51F3F621870EBD7759A91FE /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BCABAE5281493808F37E34D9 /* KuzioApp.swift in Sources */,
+				5F4EB9C476EA3BF056D05E3B /* KuzioControlMetrics.swift in Sources */,
+				FD97E11CDBE721CEC70B79BF /* KuzioTypography.swift in Sources */,
+				65AAFBB4C146480F70EF52A1 /* LibraryBootstrap.swift in Sources */,
+				380499B089D6DB284E866380 /* LibraryBrowserView.swift in Sources */,
+				7E1E0962632B241D10695133 /* LibraryIdentifiers.swift in Sources */,
+				538755033A00A466DBE3DFE8 /* LibraryManifest.swift in Sources */,
+				F51C04E7EC555DCE892B4FA3 /* LibraryManifestValidator.swift in Sources */,
+				B77E7B53D56EC1C60C729953 /* LibraryNode.swift in Sources */,
+				09902039B18C6E03C69D3F31 /* LibraryOperationSheets.swift in Sources */,
+				0881F624FD5965FBBE9CF2D5 /* LibraryPackagePaths.swift in Sources */,
+				8C809D48BCE1904AAEF4A7ED /* LibraryReaderView.swift in Sources */,
+				6A88B9AADE67C942EC658C2F /* LibraryRootView.swift in Sources */,
+				D380CA0E9D31845CA14E9E5A /* LibraryStore+Mutations.swift in Sources */,
+				F593CB4C99C6D2976FFC900C /* LibraryStore+Transactions.swift in Sources */,
+				FDA81E2EDFCE586F25790886 /* LibraryStore.swift in Sources */,
+				35279A9AB294C1C8FB36339E /* LibraryStoreError.swift in Sources */,
+				7D3D09C60B8E10C8E62BBAC2 /* LibraryStoreIO.swift in Sources */,
+				ECA92D627268E93359536B04 /* LibraryTrashView.swift in Sources */,
+				244288AE872FFFC17C643247 /* LibraryViewModel.swift in Sources */,
+				BBA1FFA85C5233A55E83D4EF /* SystemFileIconProvider.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		25362DF0EB02875D0734EF25 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = L5ZXXFUZTL;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Kuzio;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.education";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.Vita0818.Kuzio;
+				PRODUCT_MODULE_NAME = KuzioApp;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		73D0049636CE436B1C20F625 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
+				MARKETING_VERSION = 0.1;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 6.0;
+			};
+			name = Debug;
+		};
+		75A3BCFD49B25802823ACF1A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = L5ZXXFUZTL;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Kuzio;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.education";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.Vita0818.Kuzio;
+				PRODUCT_MODULE_NAME = KuzioApp;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		B8DDCE003F92ED64EE468679 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
+				MARKETING_VERSION = 0.1;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 6.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		0FB3D0D0ABA7B1C3EE476B7D /* Build configuration list for PBXProject "Kuzio" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				73D0049636CE436B1C20F625 /* Debug */,
+				B8DDCE003F92ED64EE468679 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		C3F6FA12AD6CED5DFD17440D /* Build configuration list for PBXNativeTarget "Kuzio" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				75A3BCFD49B25802823ACF1A /* Debug */,
+				25362DF0EB02875D0734EF25 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = BAAB69486D864E195C833179 /* Project object */;
+}

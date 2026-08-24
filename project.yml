@@ -1,0 +1,45 @@
+name: Kuzio
+
+options:
+  bundleIdPrefix: com.Vita0818
+  deploymentTarget:
+    macOS: "26.0"
+  createIntermediateGroups: true
+
+settings:
+  base:
+    SWIFT_VERSION: "6.0"
+    MARKETING_VERSION: "0.1"
+    CURRENT_PROJECT_VERSION: "1"
+    CODE_SIGN_STYLE: Automatic
+
+targets:
+  Kuzio:
+    type: application
+    platform: macOS
+    sources:
+      - path: Sources/KuzioApp
+        excludes:
+          - Fonts
+      - path: Sources/KuzioApp/Fonts
+        type: folder
+        buildPhase: resources
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.Vita0818.Kuzio
+        PRODUCT_MODULE_NAME: KuzioApp
+        GENERATE_INFOPLIST_FILE: "YES"
+        INFOPLIST_KEY_CFBundleDisplayName: Kuzio
+        INFOPLIST_KEY_LSApplicationCategoryType: public.app-category.education
+
+schemes:
+  Kuzio:
+    build:
+      targets:
+        Kuzio: all
+    run:
+      config: Debug
+    management:
+      shared: true
+      orderHint: 0
+      isShown: true
