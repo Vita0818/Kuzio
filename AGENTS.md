@@ -68,6 +68,14 @@ git status --short
 - `docs/NEXT_TARGET.md` 是临时下一目标记录，只允许保留一个经用户确认的 active target。
 - 目标完成或不再有效后必须删除该文件；不得把待办清单、长期路线图或未经确认的想法堆入其中。
 
+## 本机安装合同
+
+- 本机正式使用的 App 固定安装为 `~/Applications/Kuzio.app`；安装产物是本地生成物，不提交 Git，也不得成为源码事实源。
+- 每次用户确认的重大版本更新完成后，必须先通过相称测试与全新 Release App build，再使用同一套本机 Developer ID Application 身份、hardened runtime 与 secure timestamp 签名，更新该安装路径，并从安装路径启动验收；用户不需要打开 Xcode 或手动构建。
+- 更新后至少核对 bundle identifier、版本/build、架构、签名、字体资源，以及 production 默认库和一个真实外部资源链接。不得用 Debug、`-KuzioPreviewData`、临时 bundle ID 或旧构建产物覆盖安装版。
+- app-scoped bookmark 与签名身份相关；后续更新不得改用 ad-hoc 或另一签名身份。所需身份不可用时必须停止安装并报告，不得通过 raw path、复制外部文件或其他兜底绕过。
+- 安装或升级 App bundle 不得删除、替换或迁移用户 Application Support 下的 production 资料库；本地安装合同不等于已完成公证、发布或 App Sandbox 配置。
+
 ## 项目理解要求
 
 修改前至少确认：
@@ -75,7 +83,9 @@ git status --short
 - 产品 target：macOS 26 `Kuzio` App；入口为 `Sources/KuzioApp/KuzioApp.swift`。
 - 工程：`Package.swift` 提供 SwiftPM executable/test 入口；`project.yml` 通过本机 XcodeGen 2.45.4 生成 `Kuzio.xcodeproj` 正式 App target。
 - UI 链路：`KuzioApp` → `LibraryRootView` → 系统两列 `NavigationSplitView` → `LibraryBrowserPage` / `LibraryReaderView` / `LibraryTrashView`。
-- 数据链路：`LibraryBootstrap` → actor `LibraryStore` → versioned `manifest.json` + UUID payload objects → `LibrarySnapshot` → `LibraryViewModel` → 任意深度 folder/document 投影；DEBUG-only `-KuzioPreviewData` seed 不是 production fallback。
+- 数据链路：`LibraryBootstrap` → actor `LibraryStore` → schema v2 `manifest.json` + UUID payload/locator objects → `LibrarySnapshot` → `LibraryViewModel` → 任意深度 virtual folder/document/resource-link 投影；已知 schema v1 只允许事务迁移到 v2，DEBUG-only `-KuzioPreviewData` seed 不是 production fallback。
+- 资源链接核心合同：`NodeID` 只表示库内虚拟位置，`ResourceID` 表示外部资源身份，`ImportID` 只关联一次文件夹导入批次，immutable locator object 只表示访问定位；真实文件/云端目录结构不得成为 Kuzio hierarchy truth。选择文件夹时只把当时可见目录递归投影为虚拟 folder tree，并为每个文件创建链接；投影完成后 rename/move/trash/delete 只改变虚拟节点，永久移除链接绝不删除外部目标，也不 watch 或自动同步真实目录。显式重新链接只替换 locator，保持虚拟结构与 node/resource identity。
+- 重新链接 UI 只允许复用项目右键菜单中的单一“重新链接”操作和原生 `NSOpenPanel`；不得增加状态文案、说明页、徽标、提示卡片或额外确认弹窗。
 - UI 禁区：不引入品牌色、自定义渐变、自绘玻璃、胶囊、装饰性阴影或自制图标；只使用系统语义表面、SF Symbols、`NSWorkspace` 原生文件图标与 Apple 原生 Liquid Glass API。
 - 字体：拉丁字母、数字与技术文本使用随 App 分发的官方 JetBrains Mono `v2.304` 四档静态字体；中文由系统字体级联回退为苹方。字体注册、checksum、许可证与 fail-closed 合同见 `docs/FONT_DEPENDENCY.md`。
 - macOS 圆形图标按钮：按 Rokurics Mac 源码保持 36pt control / 15pt SF Symbol；不得误用共享移动端的 44pt / 18pt 指标，也不得退回只有 glyph 大小的默认小按钮。

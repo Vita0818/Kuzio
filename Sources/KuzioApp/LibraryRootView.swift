@@ -61,7 +61,7 @@ private struct LibrarySidebar: View {
                 .padding(.top, 22)
                 .padding(.bottom, 12)
 
-            VStack(spacing: 4) {
+            VStack(spacing: KuzioControlMetrics.sidebarRowSpacing) {
                 ForEach(LibraryDestination.allCases) { destination in
                     let isSelected = library.destination == destination
 
@@ -73,7 +73,7 @@ private struct LibrarySidebar: View {
                                 destinationRow(destination, isSelected: true)
                                     .glassEffect(
                                         Glass.regular.interactive(),
-                                        in: .rect(cornerRadius: 10)
+                                        in: .rect(cornerRadius: KuzioControlMetrics.sidebarCornerRadius)
                                     )
                             } else {
                                 destinationRow(destination, isSelected: false)
@@ -96,24 +96,24 @@ private struct LibrarySidebar: View {
         _ destination: LibraryDestination,
         isSelected: Bool
     ) -> some View {
-        HStack(spacing: 10) {
+        HStack(spacing: KuzioControlMetrics.sidebarContentSpacing) {
             Image(systemName: destination.systemImage)
-                .font(.system(size: 14, weight: .semibold))
+                .font(.system(size: KuzioControlMetrics.sidebarIconSize, weight: .medium))
                 .symbolRenderingMode(.monochrome)
-                .frame(width: 22)
+                .frame(width: KuzioControlMetrics.sidebarIconFrameWidth)
 
             Text(destination.title)
                 .font(KuzioTypography.body(
-                    size: 14,
+                    size: 13,
                     weight: isSelected ? .semibold : .medium
                 ))
 
             Spacer(minLength: 0)
         }
         .foregroundStyle(isSelected ? .primary : .secondary)
-        .padding(.horizontal, 12)
-        .padding(.vertical, 9)
+        .padding(.horizontal, KuzioControlMetrics.sidebarHorizontalPadding)
+        .padding(.vertical, KuzioControlMetrics.sidebarVerticalPadding)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .contentShape(.rect(cornerRadius: 10))
+        .contentShape(.rect(cornerRadius: KuzioControlMetrics.sidebarCornerRadius))
     }
 }

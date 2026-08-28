@@ -5,6 +5,7 @@ import Foundation
 enum LibraryStoreIO {
     static let maximumManifestBytes = 64 * 1_024 * 1_024
     static let maximumPayloadBytes = 64 * 1_024 * 1_024
+    static let maximumLocatorBytes = 1 * 1_024 * 1_024
 
     static func encoder() -> JSONEncoder {
         let encoder = JSONEncoder()

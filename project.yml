@@ -28,6 +28,7 @@ targets:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.Vita0818.Kuzio
         PRODUCT_MODULE_NAME: KuzioApp
+        DEVELOPMENT_TEAM: L5ZXXFUZTL
         GENERATE_INFOPLIST_FILE: "YES"
         INFOPLIST_KEY_CFBundleDisplayName: Kuzio
         INFOPLIST_KEY_LSApplicationCategoryType: public.app-category.education

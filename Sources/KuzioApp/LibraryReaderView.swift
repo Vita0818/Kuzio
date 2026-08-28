@@ -66,23 +66,12 @@ struct LibraryReaderView: View {
 
     private var header: some View {
         HStack(alignment: .top, spacing: 14) {
-            Button {
+            KuzioCircleIconButton(
+                systemImage: "chevron.left",
+                accessibilityTitle: "返回资料库"
+            ) {
                 library.closeDocument()
-            } label: {
-                Image(systemName: "chevron.left")
-                    .font(.system(size: KuzioControlMetrics.iconSymbolSize, weight: .semibold))
-                    .symbolRenderingMode(.monochrome)
             }
-            .buttonStyle(.glass)
-            .buttonBorderShape(.circle)
-            .controlSize(.large)
-            .frame(
-                width: KuzioControlMetrics.iconButtonSize,
-                height: KuzioControlMetrics.iconButtonSize
-            )
-            .contentShape(Circle())
-            .help("返回资料库")
-            .accessibilityLabel("返回资料库")
 
             VStack(alignment: .leading, spacing: 7) {
                 Text(entry?.title ?? document.title)
@@ -100,8 +89,11 @@ struct LibraryReaderView: View {
             Spacer(minLength: 12)
 
             if let entry {
-                HStack(spacing: 8) {
-                    Button {
+                HStack(spacing: KuzioControlMetrics.iconButtonSpacing) {
+                    KuzioCircleIconButton(
+                        systemImage: isEditing ? "checkmark" : "pencil",
+                        accessibilityTitle: isEditing ? "保存" : "编辑"
+                    ) {
                         if isEditing {
                             Task {
                                 await library.saveActiveDocument(text: draft)
@@ -111,41 +103,16 @@ struct LibraryReaderView: View {
                             draft = document.text ?? ""
                             isEditing = true
                         }
-                    } label: {
-                        Image(systemName: isEditing ? "checkmark" : "pencil")
-                            .font(.system(size: KuzioControlMetrics.iconSymbolSize, weight: .semibold))
-                            .symbolRenderingMode(.monochrome)
                     }
-                    .buttonStyle(.glass)
-                    .buttonBorderShape(.circle)
-                    .controlSize(.large)
-                    .frame(
-                        width: KuzioControlMetrics.iconButtonSize,
-                        height: KuzioControlMetrics.iconButtonSize
-                    )
-                    .contentShape(Circle())
-                    .help(isEditing ? "保存" : "编辑")
-                    .accessibilityLabel(isEditing ? "保存" : "编辑")
 
                     if isEditing {
-                        Button {
+                        KuzioCircleIconButton(
+                            systemImage: "xmark",
+                            accessibilityTitle: "取消编辑"
+                        ) {
                             draft = document.text ?? ""
                             isEditing = false
-                        } label: {
-                            Image(systemName: "xmark")
-                                .font(.system(size: KuzioControlMetrics.iconSymbolSize, weight: .semibold))
-                                .symbolRenderingMode(.monochrome)
                         }
-                        .buttonStyle(.glass)
-                        .buttonBorderShape(.circle)
-                        .controlSize(.large)
-                        .frame(
-                            width: KuzioControlMetrics.iconButtonSize,
-                            height: KuzioControlMetrics.iconButtonSize
-                        )
-                        .contentShape(Circle())
-                        .help("取消编辑")
-                        .accessibilityLabel("取消编辑")
                     }
 
                     Menu {
@@ -169,21 +136,11 @@ struct LibraryReaderView: View {
                             Label("移到废纸篓", systemImage: "trash")
                         }
                     } label: {
-                        Image(systemName: "ellipsis")
-                            .font(.system(size: KuzioControlMetrics.iconSymbolSize, weight: .semibold))
-                            .symbolRenderingMode(.monochrome)
+                        KuzioCircleIconLabel(systemImage: "ellipsis")
                     }
                     .menuStyle(.button)
-                    .buttonStyle(.glass)
-                    .buttonBorderShape(.circle)
-                    .controlSize(.large)
-                    .frame(
-                        width: KuzioControlMetrics.iconButtonSize,
-                        height: KuzioControlMetrics.iconButtonSize
-                    )
-                    .contentShape(Circle())
-                    .help("更多")
-                    .accessibilityLabel("更多")
+                    .menuIndicator(.hidden)
+                    .kuzioCircleIconControl(accessibilityTitle: "更多")
                 }
             }
         }

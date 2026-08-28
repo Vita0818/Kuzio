@@ -52,7 +52,11 @@ struct LibraryTrashView: View {
                 Task { await library.permanentlyDelete(target.id) }
             }
         } message: { target in
-            Text("“\(target.title)”及其所有子项目将从 Kuzio 管理的资料库中删除。")
+            if target.kind == .resourceLink {
+                Text("只会从 Kuzio 移除“\(target.title)”的链接；外部资源不会被删除。")
+            } else {
+                Text("“\(target.title)”及其所有子项目将从 Kuzio 管理的资料库中删除。")
+            }
         }
     }
 }
@@ -69,6 +73,12 @@ private struct LibraryTrashCard: View {
                     .resizable()
                     .interpolation(.high)
                     .scaledToFit()
+                    .frame(width: 42, height: 42)
+                    .accessibilityHidden(true)
+            } else if item.kind == .resourceLink {
+                Image(systemName: "link")
+                    .font(.system(size: 24, weight: .regular))
+                    .symbolRenderingMode(.monochrome)
                     .frame(width: 42, height: 42)
                     .accessibilityHidden(true)
             } else {
@@ -91,37 +101,18 @@ private struct LibraryTrashCard: View {
 
             Spacer(minLength: 12)
 
-            Button(action: onRestore) {
-                Image(systemName: "arrow.uturn.backward")
-                    .font(.system(size: KuzioControlMetrics.iconSymbolSize, weight: .semibold))
-                    .symbolRenderingMode(.monochrome)
-            }
-            .buttonStyle(.glass)
-            .buttonBorderShape(.circle)
-            .controlSize(.large)
-            .frame(
-                width: KuzioControlMetrics.iconButtonSize,
-                height: KuzioControlMetrics.iconButtonSize
+            KuzioCircleIconButton(
+                systemImage: "arrow.uturn.backward",
+                accessibilityTitle: "恢复",
+                action: onRestore
             )
-            .contentShape(Circle())
-            .help("恢复")
-            .accessibilityLabel("恢复")
 
-            Button(role: .destructive, action: onDelete) {
-                Image(systemName: "trash.slash")
-                    .font(.system(size: KuzioControlMetrics.iconSymbolSize, weight: .semibold))
-                    .symbolRenderingMode(.monochrome)
-            }
-            .buttonStyle(.glass)
-            .buttonBorderShape(.circle)
-            .controlSize(.large)
-            .frame(
-                width: KuzioControlMetrics.iconButtonSize,
-                height: KuzioControlMetrics.iconButtonSize
+            KuzioCircleIconButton(
+                systemImage: "trash.slash",
+                accessibilityTitle: "永久删除",
+                role: .destructive,
+                action: onDelete
             )
-            .contentShape(Circle())
-            .help("永久删除")
-            .accessibilityLabel("永久删除")
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 12)

@@ -19,12 +19,14 @@
 		6A88B9AADE67C942EC658C2F /* LibraryRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EFF0E3136857D7A389726CF /* LibraryRootView.swift */; };
 		7D3D09C60B8E10C8E62BBAC2 /* LibraryStoreIO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25E8B51DA2ABF426B3B16625 /* LibraryStoreIO.swift */; };
 		7E1E0962632B241D10695133 /* LibraryIdentifiers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 085E3B6101BE2DA00F962CFA /* LibraryIdentifiers.swift */; };
+		7F2BD8FC806962AC2E513B4E /* LibraryToolProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B906038D97055EA7C9E9F2C /* LibraryToolProvider.swift */; };
 		8C809D48BCE1904AAEF4A7ED /* LibraryReaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE819D9043DC15FAAD1BA5A7 /* LibraryReaderView.swift */; };
 		B77E7B53D56EC1C60C729953 /* LibraryNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1ABF06AB9E98473C2FBA4EA /* LibraryNode.swift */; };
 		BBA1FFA85C5233A55E83D4EF /* SystemFileIconProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3817D544A3EB80A470110C0D /* SystemFileIconProvider.swift */; };
 		BCABAE5281493808F37E34D9 /* KuzioApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7E19927AC3E2795BF8B4065 /* KuzioApp.swift */; };
 		D380CA0E9D31845CA14E9E5A /* LibraryStore+Mutations.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD14FAE8F013AA0F6FA089E7 /* LibraryStore+Mutations.swift */; };
 		ECA92D627268E93359536B04 /* LibraryTrashView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F05A633BBFE11368DB114F55 /* LibraryTrashView.swift */; };
+		ECAADB62ADA57613C000B953 /* LibraryToolControlPlane.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC2A34630CDBD54BEDF1C965 /* LibraryToolControlPlane.swift */; };
 		F51C04E7EC555DCE892B4FA3 /* LibraryManifestValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF9A7DED6FC10136DA74FC7 /* LibraryManifestValidator.swift */; };
 		F593CB4C99C6D2976FFC900C /* LibraryStore+Transactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D84B5D5E921E7A80EC733BC1 /* LibraryStore+Transactions.swift */; };
 		FD97E11CDBE721CEC70B79BF /* KuzioTypography.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13792CEA9B9B6C345F0A3B0D /* KuzioTypography.swift */; };
@@ -46,11 +48,13 @@
 		41BA10A605D102CAB55F0171 /* LibraryPackagePaths.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryPackagePaths.swift; sourceTree = "<group>"; };
 		4A28A9331925C0C9848FD5AD /* Kuzio.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Kuzio.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5AFE098CDDAB8CE75A20B201 /* LibraryBrowserView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryBrowserView.swift; sourceTree = "<group>"; };
+		5B906038D97055EA7C9E9F2C /* LibraryToolProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryToolProvider.swift; sourceTree = "<group>"; };
 		9A05E012F795993B64695CB1 /* LibraryBootstrap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryBootstrap.swift; sourceTree = "<group>"; };
 		B1ABF06AB9E98473C2FBA4EA /* LibraryNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryNode.swift; sourceTree = "<group>"; };
 		C7E19927AC3E2795BF8B4065 /* KuzioApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KuzioApp.swift; sourceTree = "<group>"; };
 		CE819D9043DC15FAAD1BA5A7 /* LibraryReaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryReaderView.swift; sourceTree = "<group>"; };
 		D84B5D5E921E7A80EC733BC1 /* LibraryStore+Transactions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LibraryStore+Transactions.swift"; sourceTree = "<group>"; };
+		DC2A34630CDBD54BEDF1C965 /* LibraryToolControlPlane.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryToolControlPlane.swift; sourceTree = "<group>"; };
 		DD14FAE8F013AA0F6FA089E7 /* LibraryStore+Mutations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LibraryStore+Mutations.swift"; sourceTree = "<group>"; };
 		E69C2E96AEFF4A0FCFE8C1E6 /* LibraryManifest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryManifest.swift; sourceTree = "<group>"; };
 		F05A633BBFE11368DB114F55 /* LibraryTrashView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryTrashView.swift; sourceTree = "<group>"; };
@@ -86,6 +90,8 @@
 				333399B70E1AFB9FFB45E37A /* LibraryOperationSheets.swift */,
 				CE819D9043DC15FAAD1BA5A7 /* LibraryReaderView.swift */,
 				0EFF0E3136857D7A389726CF /* LibraryRootView.swift */,
+				DC2A34630CDBD54BEDF1C965 /* LibraryToolControlPlane.swift */,
+				5B906038D97055EA7C9E9F2C /* LibraryToolProvider.swift */,
 				F05A633BBFE11368DB114F55 /* LibraryTrashView.swift */,
 				FB46334F678F58CE246484E4 /* LibraryViewModel.swift */,
 				3817D544A3EB80A470110C0D /* SystemFileIconProvider.swift */,
@@ -150,6 +156,7 @@
 				LastUpgradeCheck = 1430;
 				TargetAttributes = {
 					7733B0F944E7E9417C543567 = {
+						DevelopmentTeam = L5ZXXFUZTL;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -207,6 +214,8 @@
 				FDA81E2EDFCE586F25790886 /* LibraryStore.swift in Sources */,
 				35279A9AB294C1C8FB36339E /* LibraryStoreError.swift in Sources */,
 				7D3D09C60B8E10C8E62BBAC2 /* LibraryStoreIO.swift in Sources */,
+				ECAADB62ADA57613C000B953 /* LibraryToolControlPlane.swift in Sources */,
+				7F2BD8FC806962AC2E513B4E /* LibraryToolProvider.swift in Sources */,
 				ECA92D627268E93359536B04 /* LibraryTrashView.swift in Sources */,
 				244288AE872FFFC17C643247 /* LibraryViewModel.swift in Sources */,
 				BBA1FFA85C5233A55E83D4EF /* SystemFileIconProvider.swift in Sources */,

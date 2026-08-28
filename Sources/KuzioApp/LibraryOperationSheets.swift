@@ -147,6 +147,13 @@ enum LibraryMetadataFormatter {
             if mediaType.hasPrefix("text/markdown") { return "Markdown" }
             if mediaType.hasPrefix("text/plain") { return "文本" }
             return mediaType
+        case .resourceLink:
+            switch entry.externalResource?.kind {
+            case .file: return "文件链接"
+            case .directory: return "文件夹链接"
+            case .https: return "网页链接"
+            case nil: return "资源链接"
+            }
         }
     }
 
@@ -161,6 +168,10 @@ enum LibraryMetadataFormatter {
     static func metadataLine(for entry: LibraryEntry) -> String {
         if entry.isFolder {
             return "\(entry.childIDs.count) 项 · \(date(entry.modifiedAt))"
+        }
+        if entry.isResourceLink {
+            let target = entry.externalResource?.lastKnownName ?? "外部资源"
+            return "\(typeName(for: entry)) · \(target) · \(date(entry.modifiedAt))"
         }
         let bytes = byteCount(entry.document?.byteCount ?? 0)
         return "\(typeName(for: entry)) · \(bytes) · \(date(entry.modifiedAt))"

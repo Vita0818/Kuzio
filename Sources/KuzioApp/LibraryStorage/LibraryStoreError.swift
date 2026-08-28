@@ -10,7 +10,12 @@ enum LibraryStoreError: Error, Equatable, Sendable {
     case malformedManifest
     case invariantViolation(String)
     case invalidTitle
+    case invalidExternalResourceMetadata
+    case invalidResourceLocator
+    case invalidLinkedTree
+    case linkedTreeTooLarge
     case nodeNotFound(NodeID)
+    case resourceNotFound(ResourceID)
     case parentNotFound(NodeID)
     case parentNotFolder(NodeID)
     case kindMismatch(NodeID)
@@ -56,8 +61,18 @@ extension LibraryStoreError: LocalizedError {
             return "资料库结构不一致。"
         case .invalidTitle:
             return "名称无效。"
+        case .invalidExternalResourceMetadata:
+            return "外部资源信息无效。"
+        case .invalidResourceLocator:
+            return "外部资源链接无效。"
+        case .invalidLinkedTree:
+            return "所选文件夹结构无效。"
+        case .linkedTreeTooLarge:
+            return "所选内容超过资料库容量。"
         case .nodeNotFound:
             return "找不到此项目。"
+        case .resourceNotFound:
+            return "找不到此外部资源。"
         case .parentNotFound:
             return "找不到目标文件夹。"
         case .parentNotFolder:

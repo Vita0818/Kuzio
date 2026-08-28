@@ -1,12 +1,15 @@
 # CURRENT_STATE
 
-最近一次自查日期：2026-08-24
+最近一次自查日期：2026-08-27
 
 ## 当前真实状态总览
 
-- Kuzio 当前工作区实现的是 macOS 26 原生 SwiftUI 通用资料库，不是 Rokurics 学习业务的复制品。
-- UI、文件系统、测试与 XcodeGen 工程均仍是未提交工作区改动；`main` 仍指向用户已有的初始提交 `v0.0`，本轮未 add、commit 或 push。
-- 最新源码已经完成前端视觉重做与本地资料库实现。用户在 Xcode 的首次构建发现 `SystemFileIconProvider` 把 AppKit Swift 参数标签写成了 `icon(forContentType:)`；当前源码已修为 SDK 要求的 `icon(for:)`，但修正后尚未重新执行 `swift test` / `xcodebuild`，因此当前不能描述为“已构建通过”。
+- Kuzio 当前工作区实现的是 macOS 26 原生 SwiftUI 虚拟层级资料库；用户已确认核心设计为“库内结构与真实文件/云端结构解耦，节点只链接外部资源”，仍不采用 Rokurics 固定课程层级。
+- `main` 与 `origin/main` 当前位于 `v0.1`；本轮 schema v2、资源链接数据层、测试与文档属于未提交工作区改动，未 add、commit 或 push。
+- 最新源码已经完成前端视觉重做、本地资料库、文件/文件夹递归链接、文件和导入批次的显式重新链接、provider-neutral 工具控制面，以及可组合的工具目录/JSON Schema/严格 wire dispatcher。当前工具层不包含模型 SDK、提示词、聊天 UI、网络服务、工具总和聚合器或 AI runtime；未来内核只需把 `LibraryToolProvider` 作为一个 contributor 并入其他工具来源。2026-08-27 原控制面版本已通过 `swift build`、34-test `swift test`、Xcode Debug/Release App build 并更新安装版；当前 provider 版本的最新验证见下文。
+- Release `0.1`（build `1`）已经安装为 `~/Applications/Kuzio.app`，是 arm64/x86_64 universal app；当前本机安装版使用同一 Developer ID Application 身份、hardened runtime 与 secure timestamp 签名，签名验证通过，可直接从安装路径启动，无需打开 Xcode。
+- 2026-08-24 按 Rokurics Mac 源码再次统一全部按钮家族后，已重新运行 `swift build`、26-test `swift test` 与 Xcode Debug App build，并使用隔离 `-KuzioPreviewData` 在 Light/Dark 真实窗口检查 library、reader、editor、trash 与 sheet；可见 circle glass、hit frame 与 SF Symbol 已共同收敛到 36pt / 15pt，不再只有外层 layout frame 为 36pt。
+- 2026-08-26 已修复 circle control“可见圆面 36pt、实际只有 glyph 中心容易点中”的命中错位：共享 label 自身拥有 36×36pt frame 与 circle interaction shape，browser history 和 reader back 均已用可见圆面左右边缘坐标点击通过。folder/resource grid tile 同时固定为 152pt 高，并为两行标题与 detail 各保留固定槽位，长短名称不再改变 glass rectangle 尺寸。
 - 当前技术栈为 Swift 6、SwiftUI、Observation、Foundation、AppKit、Core Text、CryptoKit 与 Uniform Type Identifiers；没有第三方 Swift package runtime dependency。
 - 唯一随 App 分发的第三方资源是官方 JetBrains Mono `v2.304` 四档静态 TTF，许可证为 SIL OFL 1.1。
 
@@ -18,22 +21,41 @@
 - 根结构：系统两列 `NavigationSplitView`；sidebar 宽度 min 210 / ideal 236 / max 280，窗口最小 1040×690。
 - sidebar 只承担稳定产品目的地：`资料库` 与 `废纸篓`；任意深度目录不塞入 sidebar，而在 detail 浏览器中呈现。
 - sidebar 顶部品牌名 `Kuzio` 使用 28pt JetBrains Mono semibold；单行品牌区采用 Intatis/Mopelium 的 18pt 水平、22pt 顶部、12pt 底部比例，全局拉丁文本统一使用同一字体族，中文通过 Apple 字体级联使用系统苹方。
+- sidebar destination button 采用 Rokurics Mac 的 6pt 行间距、13pt SF Symbol、20pt 图标槽、8pt 图文间距、12pt 水平 / 10pt 垂直内边距与 15pt selected glass 圆角。
 
 ### 浏览与阅读
 
-- `LibraryBrowserPage` 使用固定 32pt 页标题、34pt 页面边距、1120pt 最大内容宽度、adaptive folder grid 与 document list。
-- folder tile 使用 `NSWorkspace` 返回的 Finder 原生文件夹图标；没有自制 folder asset、手绘矢量或 `folder.fill` 替代。
-- 后退、前进、新建文件夹、新建文档、阅读页返回/编辑/取消/更多、废纸篓恢复/删除均使用 Rokurics Mac 源码的 36pt control / 15pt SF Symbol；不再把移动端 44pt label 叠加到系统 glass button。
+- `LibraryBrowserPage` 使用固定 32pt 页标题、34pt 页面边距、1120pt 最大内容宽度、adaptive folder/resource grid 与 document list。
+- folder 与 file resource-link 共用固定 152pt 高的 grid tile；分别使用 `NSWorkspace` 返回的 Finder 原生文件夹图标和文件类型图标。标题固定使用 34pt 两行槽，detail 固定使用 13pt 槽；resource-link tile 只显示文件名，空 detail 槽只承担布局，不显示额外说明。
+- 后退、前进、阅读页返回/编辑/取消/更多、废纸篓恢复/删除与 browser 单一添加入口均通过共享 `KuzioCircleIconButton` / `kuzioCircleIconControl` 使用 Rokurics Mac 源码的 36pt control、15pt semibold monochrome SF Symbol 与 8pt 同组间距；不再由各页面分散实现，也不把移动端 44pt label 叠加到系统 glass button。
+- folder tile 图标采用 Rokurics Mac 的 58×50pt Finder icon / 52pt 垂直槽；document card action label 内的 leading SF Symbol 采用 21pt semibold / 42pt 图标槽。context menu、alert 与 sheet toolbar 的文字按钮仍由 macOS 原生 control sizing 管理。
 - 所有 glass surface 只调用 Apple 官方 `.buttonStyle(.glass)` 或 `.glassEffect(...)`；没有自绘 blur、highlight、refraction 或兼容 fallback。
 - 当前没有品牌色、RGB/Hex token、渐变、胶囊、装饰阴影或自定义 root/sidebar 背景；window、sidebar、文字与分隔层级均跟随系统语义外观。
-- 文档支持打开、Markdown `AttributedString` 阅读、文本选择、纯文本编辑与保存；不包含录音、转写、AI 总结或固定课程层级。
+- 文档支持打开、Markdown `AttributedString` 阅读、文本选择、纯文本编辑与保存；browser 右上角只显示一个 36pt `+`，普通点击由 `NSOpenPanel` 多选文件或文件夹，新建文件夹/文档命令收在同一个 menu 中。文件直接创建 resource-link；文件夹递归生成同名虚拟 folder tree，并为每个可见文件创建 resource-link。取消不 mutation，确认后只保存只读 app-scoped security-scoped bookmark，不复制或移动原文件。
+- “此文件夹为空”使用 `NSWorkspace` 返回的 Finder 原生 folder icon，不使用 SF Symbol folder 占位。
+- 点击 file resource-link 会从 object store 读取并校验 bookmark、以 `.withSecurityScope` 解析、平衡 `startAccessingSecurityScopedResource` / `stopAccessingSecurityScopedResource` 生命周期，再通过 `NSWorkspace` 打开原文件；stale bookmark 会在保持 `ResourceID` / `NodeID` 的前提下事务替换。文件离线、移动、权限失效或系统无法打开时明确报错。
+- file resource-link 与可识别导入批次的 virtual folder 右键菜单只增加一个“重新链接”；随后直接使用原生 file-only / folder-only `NSOpenPanel`。没有新增状态文案、说明页、徽标、提示卡片或额外确认弹窗。
+- 不包含录音、转写、AI 总结或固定课程层级。
+
+## 当前工具控制面
+
+- `LibraryToolControlPlane` 是独立于 UI 和模型供应商的 actor，只接收强类型 `LibraryToolCall`，完成 capability 检查后复用唯一 production `LibraryStore`。
+- `LibraryToolProvider` 以 `com.vitemis.kuzio.library-tools.v1` 发布 capability-scoped 工具 definitions；每项包含稳定名称、description、标准 JSON Schema object 和 required capability。它只是未来完整工具总和中的 Kuzio contributor，不排斥或替代其他工具来源。
+- provider 接收最多 65,536 bytes 的 JSON object，拒绝未知字段、缺少/错误类型、非 canonical UUID、负 index 与未知 tool name；未授权工具不出现在 definitions 中，绕过目录直接调用仍在解码/Store 前返回 `permission_denied`。
+- provider 把成功/失败编码为稳定 snake_case JSON envelope，合同中的可空 node/content/mutation 字段显式输出 JSON `null`；不自动重试、合并冲突、修改调用或维护第二份 tool state。
+- 当前提供 8 个工具：读取库状态、列出 folder children、分段读取 UTF-8 内容、创建 folder、rename、move、trash、restore。没有 permanent-delete、外部文件写入、任意路径读取、自动重连或 source refresh 工具。
+- capability 明确分为 `read_structure`、`read_content` 与 `mutate_structure`；未授权调用在进入 Store 前返回稳定 `permission_denied`。
+- 所有 structure mutation 必须携带 `expected_revision`，并返回 published revision、transaction ID 和 changed node IDs；revision conflict 不自动重试或合并。
+- 工具只接受 `NodeID` 和虚拟 parent，不接受 raw path、URL、bookmark bytes、manifest fragment 或 object-store key。external resource content 仍通过现有 `ResourceID`、immutable locator 与 security-scoped access 读取，结果不暴露真实路径。
+- 内容读取按 byte offset 分段，单次默认 64 KiB、上限 256 KiB，并返回精确 `nextByteOffset`。当前只支持内部 UTF-8 document 与已链接本机 UTF-8 file；binary、directory 和 HTTPS 内容明确失败，不调用替代 parser/backend。
+- 精确 tool name、JSON Schema、调用参数、结果与稳定错误码见 `docs/TOOL_CALLING.md`。当前没有任何模型/runtime adapter 或工具总和聚合器实例化这套 provider。
 
 ## 当前可移植文件系统
 
 ### 默认位置与包结构
 
 - production 默认库位于用户 Application Support 下的 `Kuzio/Default.kuzio`。
-- `Default.kuzio` 是可整体复制的自包含目录包；复制后重新打开可保持 library ID、node ID、层级、revision 与正文内容。
+- `Default.kuzio` 可整体复制；内部文档保持自包含。schema v2 外部链接只随包保存虚拟结构、`ResourceID` 与 locator object，不复制外部目标，因此复制到无法解析目标的环境后必须由后续访问层明确要求 relink，不能静默切换缓存或同名文件。
 - 核心布局：
 
 ```text
@@ -48,10 +70,12 @@ Default.kuzio/
 
 ### 模型与操作
 
-- `manifest.json` 标识符为 `com.vitemis.kuzio.library`，layout/schema version 当前均为 1。
+- `manifest.json` 标识符为 `com.vitemis.kuzio.library`，layout version 为 1，当前 schema version 为 2；已知 schema v1 在 open 时通过同一 transaction/previous-manifest 合同迁移到 v2，未知版本继续明确失败。
 - hierarchy 的唯一事实源是 flat manifest 中 folder 的 ordered child ID；title 从不成为磁盘路径，层级深度没有 type/subject/chapter/topic 上限。
-- node、payload object、library 与 transaction 均使用 canonical lowercase UUID；重命名和移动不会改变 node ID 或 payload identity。
-- 已实现 create folder/document、update document、rename、move、trash、restore、permanent delete、refresh、explicit previous-manifest recovery 与 garbage collection。
+- `NodeID` 只表示库内虚拟位置；`ResourceID` 表示外部文件身份；`ImportID` 关联一次文件夹导入批次。多个 resource-link node 可共享同一个资源。选择文件夹时，真实目录只作为一次性扫描输入：可见子目录成为普通 virtual folder，每个文件保存最多 1 MiB 的 immutable locator object，并可保存仅用于显式重连的 `ImportID` 与相对来源 components；manifest 不保存真实绝对根路径，来源 metadata 永不成为 hierarchy truth。
+- library、node、resource、payload object 与 transaction 均使用 canonical lowercase UUID；重命名和移动不会改变 node/resource identity。
+- 已实现 create folder/document/external-resource-link/resource-alias、atomic recursive linked-tree creation、single/batch locator replacement、rename、move、trash、restore、permanent delete、refresh、explicit previous-manifest recovery 与 garbage collection。批量重连先验证全部相对目标，再用一次 transaction 更新同一 `ImportID` 的全部 resource locator；不创建节点、不改变虚拟层级。
+- 永久移除 resource link 只删除虚拟节点；仅最后一个 alias 消失时回收 resource record 与 locator object，任何数据层 API 都不会删除外部目标。
 - 废纸篓保存原 parent/index；恢复保持 subtree 与稳定 ID。原 parent 已删除时必须给出明确恢复目的地，不静默猜测。
 
 ### 一致性与安全
@@ -59,9 +83,20 @@ Default.kuzio/
 - `LibraryStore` 是 actor；所有 mutation 带 expected manifest revision，冲突明确返回 `revisionConflict`。
 - writer 使用 `NSFileCoordinator`、transaction staging、immutable payload、atomic manifest replacement 与 previous manifest。
 - document read、refresh、purge completion 与 garbage collection 都在 library root 协调区间内重载磁盘最新 manifest，避免陈旧窗口删除另一 writer 的新 payload。
-- manifest validator 检查 format/version、canonical title/media type/UUID、node shape、唯一父级、cycle、orphan、trash overlap、资源上限、payload size 与路径类型。
+- manifest validator 检查 format/version、canonical title/media type/UUID、folder/document/resource-link shape、node→resource 引用、orphan resource、跨 document/locator object 唯一性、cycle、trash overlap、资源上限、payload/locator size、locator digest 与路径类型。
 - 管理路径拒绝 symbolic link、alias、payload/manifest hard link 和越界路径；正文读取验证 byte count 与 SHA-256。
 - corruption 不触发 preview/mock/alternate backend。当前 manifest 损坏且 previous manifest 有效时返回 `recoveryRequired`，只有显式恢复 API 才发布 previous manifest。
+
+## 本机安装状态
+
+- 本机正式使用路径固定为 `~/Applications/Kuzio.app`；该 bundle 是 Release 生成物，不属于仓库源码，不提交 Git。
+- 安装版继续通过同一个 `LibraryBootstrap` 读取用户 Application Support 下的 production `Default.kuzio`，不会复制、重建或切换第二套资料库。
+- 2026-08-26 已从安装路径实际启动，确认 production 根目录中的三门课程与一个文件可见；根文件和课程嵌套 PDF 均可通过 `NSWorkspace` 打开。
+- 先前由 ad-hoc Debug binary 创建的 app-scoped bookmarks 与稳定安装签名不兼容；四个旧根节点已移到 Kuzio 废纸篓，并由最终安装版从相同外部目标重新创建链接。外部目录和文件未被移动、复制、改名或删除，旧虚拟节点仍可恢复。
+- 当前本机安装签名包含 secure timestamp，但尚未公证；它只表示这台 Mac 上可直接使用和持续更新的本地安装版，不表示已具备对外分发条件。
+- 2026-08-27 已用最新 Release 更新安装版并实际执行一个 165-file legacy course 的文件夹重连：production revision 只从 16 增至 17，四个 root child `NodeID`、457 个 resource 总数与外部样本文件 SHA-256 均保持不变；165 个资源获得同一 `ImportID`，manifest 仍不含绝对路径，重启安装版后嵌套文件可打开。
+- 2026-08-27 工具控制面完成后再次从全新 derived data 构建 Release，并以同一 Developer ID Application 身份、hardened runtime 与 secure timestamp 更新 `~/Applications/Kuzio.app`。安装副本的 bundle identifier、`0.1` / build `1`、arm64/x86_64、可执行文件、四个字体资源与签名校验均通过；从安装路径启动后 production revision 仍为 17，三门课程和根文件可见，课程内真实 PDF 链接发起打开时没有 Kuzio 错误，本轮没有 mutation production library。
+- 2026-08-27 可组合工具 provider 完成后又从独立 derived data 全新构建 Release，保持同一 Developer ID、hardened runtime 与 secure timestamp 更新 `~/Applications/Kuzio.app`。安装副本与 fresh Release executable 完全一致；bundle identifier、`0.1` / build `1`、arm64/x86_64、四个字体 checksum 与 strict signature 均通过。从最终安装路径启动后 production revision 仍为 17，三门课程和 `Syllabus.md` 可见；点击既有 `Syllabus.md` 外部链接没有 Kuzio 错误，未执行任何资料库 mutation。
 
 ## DEBUG 边界
 
@@ -71,21 +106,23 @@ Default.kuzio/
 
 ## 测试源码状态
 
-- `Tests/KuzioAppTests/LibraryStoreTests.swift` 当前包含 18 个测试方法。
-- 覆盖方向包括：复制可移植性、32 层任意深度、稳定 ID、cycle 防护、trash/restore/permanent delete、revision conflict、并发 writer、陈旧 store garbage collection、协调读取、manifest recovery、payload digest、symlink 防护、路径标题隔离与非法 mutation target。
-- 最新测试源码尚未实际运行；结果必须等待明确授权后的 `swift test`。
+- `Tests/KuzioAppTests/LibraryStoreTests.swift` 当前包含 38 个测试方法。
+- 原 18 个文件系统测试继续覆盖复制、任意深度、稳定 ID、并发、恢复与安全；新增 8 个方向覆盖虚拟树/真实目标解耦、alias 生命周期、relink 身份、v1→v2 迁移、locator digest、HTTPS locator、陈旧 store GC 与协调读取。
+- recursive linked-tree / batch relink 继续由 4 个方向覆盖；新增 4 个工具层方向覆盖完整结构 mutation、capability/revision fail-closed、UTF-8 分段读取与真实 bookmark 外部文本读取。
+- 新增 4 个 provider 方向覆盖 capability-scoped definitions/JSON Schema、7 个结构工具的完整 JSON wire 调用链、内容工具默认参数与 snake_case/null envelope，以及 unknown/extra/malformed/oversized/unauthorized 调用 fail-closed。
+- 2026-08-27 已重新运行 `swift build`、`swift test`、Xcode Debug App build 与独立 derived data 的全新 Release App build：38 tests，0 failures，正式 App target 构建成功；同身份安装与 production 只读验收也已完成。
 
 ## 当前风险与未完成项
 
-- 最新工作区仍缺少真实 compiler/test result 与最新窗口截图；任何“通过”结论都必须等待构建和实际 UI 验收。
-- 用户截图已证明修正前的首个 compiler blocker；该 blocker 已在源码中修复，后续 compiler diagnostics 仍需重新构建才能确认。
+- 2026-08-26 已用唯一临时 bundle ID 与隔离 preview store 实际验收：单一 `+` 打开文件/文件夹多选 Open Panel；选择含空目录、两层子目录和三个文件的课程目录后，只增加一次 revision，并生成完整 virtual tree 与三个可打开的文件链接。Light 完成结果窗口检查，Dark 完成入口与实际 transaction 检查；隔离 manifest 不包含 fixture raw path。
 - 当前只提供默认 Application Support 库；Open/Save panel、用户选择外部 `.kuzio` 包、导入/导出与 document type 关联尚未确认，不得描述为已有能力。
-- schema v1 当前没有旧版本迁移器；遇到未知 layout/schema 明确失败。
-- 当前没有同步、账号、网络、跨设备协作、权限申请、签名、公证或发布配置结论。
+- 文件和文件夹多选、递归一次性投影、嵌套文件打开、单文件重连与导入批次重连已经实现；源目录后续变化的显式刷新/对账、HTTPS 添加与打开、File Provider 离线下载进度尚未实现。隐藏项目被跳过，符号链接和其他非常规文件会明确失败。
+- 正式 target 当前未启用 App Sandbox；本轮已验证安装版可创建、解析并使用只读 security-scoped bookmark，但 Sandbox entitlement 与现有默认库向 container 的迁移仍未确认，不得描述为已完成 sandbox 发布配置。
+- 当前没有同步、账号、网络抓取或跨设备协作；本机 Developer ID + secure timestamp 安装方式已经确认，但公证、对外发布与自动更新服务仍未配置。
+- 工具目录、schema、严格 dispatcher 与结果 envelope 已实现，但具体模型 runtime、完整工具总和聚合器、adapter 生命周期与用户授权入口尚未接入；不得把工具层描述为已接入 AI。
 - XCUITest、VoiceOver 全流程、大型 100k-node 压力和故障注入仍未覆盖。
 
 ## 工作区与文档冲突
 
-- 用户已有的仓库路径修正文档改动已保留。
-- 旧文档仍把数据链路写成 `LibraryCatalog.preview` 内存 fixture、字体写成系统字体、图标写成仅 SF Symbols；这些事实已被当前源码取代，本轮同步更新所有项目文档。
-- 当前源码是判断实现事实的依据；构建是否成功仍属于未验证状态。
+- 本轮继续在现有未提交 schema v2、资源链接数据层与 control metric 改动上工作；新增差异接入文件/文件夹多选、递归 linked-tree transaction 与测试，没有回退或清理其他工作区改动。
+- 旧文档把 Git 状态写成未提交 `v0.0`、schema 写成 v1 且 package 写成完全自包含；这些事实已被当前 Git/source/schema v2 取代，本轮以源码和实际命令结果为准同步更新。

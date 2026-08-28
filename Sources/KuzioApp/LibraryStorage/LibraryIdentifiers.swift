@@ -54,6 +54,42 @@ struct NodeID: Hashable, Sendable, Codable, CustomStringConvertible {
     var description: String { rawValue.uuidString.lowercased() }
 }
 
+struct ResourceID: Hashable, Sendable, Codable, CustomStringConvertible {
+    let rawValue: UUID
+
+    init(_ rawValue: UUID = UUID()) {
+        self.rawValue = rawValue
+    }
+
+    init(from decoder: Decoder) throws {
+        rawValue = try decodeCanonicalUUID(from: decoder)
+    }
+
+    func encode(to encoder: Encoder) throws {
+        try encodeCanonicalUUID(rawValue, to: encoder)
+    }
+
+    var description: String { rawValue.uuidString.lowercased() }
+}
+
+struct ImportID: Hashable, Sendable, Codable, CustomStringConvertible {
+    let rawValue: UUID
+
+    init(_ rawValue: UUID = UUID()) {
+        self.rawValue = rawValue
+    }
+
+    init(from decoder: Decoder) throws {
+        rawValue = try decodeCanonicalUUID(from: decoder)
+    }
+
+    func encode(to encoder: Encoder) throws {
+        try encodeCanonicalUUID(rawValue, to: encoder)
+    }
+
+    var description: String { rawValue.uuidString.lowercased() }
+}
+
 struct ObjectID: Hashable, Sendable, Codable, CustomStringConvertible {
     let rawValue: UUID
 

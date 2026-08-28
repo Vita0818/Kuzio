@@ -1,3 +1,4 @@
+import AppKit
 import SwiftUI
 
 struct LibraryBrowserLayout {
@@ -41,8 +42,12 @@ struct LibraryBrowserPage: View {
         library.displayedEntries.filter(\.isFolder)
     }
 
+    private var resourceLinks: [LibraryEntry] {
+        library.displayedEntries.filter(\.isResourceLink)
+    }
+
     private var documents: [LibraryEntry] {
-        library.displayedEntries.filter { !$0.isFolder }
+        library.displayedEntries.filter(\.isDocument)
     }
 
     private var query: String {
@@ -112,44 +117,22 @@ struct LibraryBrowserPage: View {
     }
 
     private var navigationButtons: some View {
-        HStack(spacing: 8) {
-            Button {
+        HStack(spacing: KuzioControlMetrics.iconButtonSpacing) {
+            KuzioCircleIconButton(
+                systemImage: "chevron.left",
+                accessibilityTitle: "后退",
+                isEnabled: library.canGoBack
+            ) {
                 library.goBack()
-            } label: {
-                Image(systemName: "chevron.left")
-                    .font(.system(size: KuzioControlMetrics.iconSymbolSize, weight: .semibold))
-                    .symbolRenderingMode(.monochrome)
             }
-            .buttonStyle(.glass)
-            .buttonBorderShape(.circle)
-            .controlSize(.large)
-            .frame(
-                width: KuzioControlMetrics.iconButtonSize,
-                height: KuzioControlMetrics.iconButtonSize
-            )
-            .contentShape(Circle())
-            .disabled(!library.canGoBack)
-            .help("后退")
-            .accessibilityLabel("后退")
 
-            Button {
+            KuzioCircleIconButton(
+                systemImage: "chevron.right",
+                accessibilityTitle: "前进",
+                isEnabled: library.canGoForward
+            ) {
                 library.goForward()
-            } label: {
-                Image(systemName: "chevron.right")
-                    .font(.system(size: KuzioControlMetrics.iconSymbolSize, weight: .semibold))
-                    .symbolRenderingMode(.monochrome)
             }
-            .buttonStyle(.glass)
-            .buttonBorderShape(.circle)
-            .controlSize(.large)
-            .frame(
-                width: KuzioControlMetrics.iconButtonSize,
-                height: KuzioControlMetrics.iconButtonSize
-            )
-            .contentShape(Circle())
-            .disabled(!library.canGoForward)
-            .help("前进")
-            .accessibilityLabel("前进")
         }
     }
 
@@ -166,68 +149,142 @@ struct LibraryBrowserPage: View {
     }
 
     private var creationButtons: some View {
-        HStack(spacing: 8) {
+        Menu {
+            Button {
+                chooseResourcesToLink()
+            } label: {
+                Label("添加文件或文件夹", systemImage: "doc")
+            }
+
+            Divider()
+
             Button {
                 nameOperation = .createFolder
             } label: {
-                Image(systemName: "folder.badge.plus")
-                    .font(.system(size: KuzioControlMetrics.iconSymbolSize, weight: .semibold))
-                    .symbolRenderingMode(.monochrome)
+                Label("新建文件夹", systemImage: "folder")
             }
-            .buttonStyle(.glass)
-            .buttonBorderShape(.circle)
-            .controlSize(.large)
-            .frame(
-                width: KuzioControlMetrics.iconButtonSize,
-                height: KuzioControlMetrics.iconButtonSize
-            )
-            .contentShape(Circle())
-            .help("新建文件夹")
-            .accessibilityLabel("新建文件夹")
 
             Button {
                 nameOperation = .createDocument
             } label: {
-                Image(systemName: "doc.badge.plus")
-                    .font(.system(size: KuzioControlMetrics.iconSymbolSize, weight: .semibold))
-                    .symbolRenderingMode(.monochrome)
+                Label("新建文档", systemImage: "doc.text")
             }
-            .buttonStyle(.glass)
-            .buttonBorderShape(.circle)
-            .controlSize(.large)
-            .frame(
-                width: KuzioControlMetrics.iconButtonSize,
-                height: KuzioControlMetrics.iconButtonSize
-            )
-            .contentShape(Circle())
-            .help("新建文档")
-            .accessibilityLabel("新建文档")
+        } label: {
+            KuzioCircleIconLabel(systemImage: "plus")
+        } primaryAction: {
+            chooseResourcesToLink()
+        }
+        .menuStyle(.button)
+        .menuIndicator(.hidden)
+        .kuzioCircleIconControl(accessibilityTitle: "添加")
+        .disabled(library.snapshot == nil || library.isAddingResources)
+    }
+
+    private func chooseResourcesToLink() {
+        let panel = NSOpenPanel()
+        panel.title = "选择文件或文件夹"
+        panel.prompt = "添加"
+        panel.canChooseFiles = true
+        panel.canChooseDirectories = true
+        panel.allowsMultipleSelection = true
+        panel.resolvesAliases = true
+        panel.canDownloadUbiquitousContents = true
+        panel.canResolveUbiquitousConflicts = true
+
+        guard panel.runModal() == .OK, !panel.urls.isEmpty else { return }
+        let selectedURLs = panel.urls
+        Task {
+            await library.createExternalLinks(to: selectedURLs)
+        }
+    }
+
+    private func chooseFileToRelink(_ entry: LibraryEntry) {
+        let panel = NSOpenPanel()
+        panel.canChooseFiles = true
+        panel.canChooseDirectories = false
+        panel.allowsMultipleSelection = false
+        panel.resolvesAliases = true
+        panel.canDownloadUbiquitousContents = true
+        panel.canResolveUbiquitousConflicts = true
+
+        guard panel.runModal() == .OK, let url = panel.url else { return }
+        Task {
+            await library.relinkFile(entry.id, to: url)
+        }
+    }
+
+    private func chooseFolderToRelink(_ entry: LibraryEntry) {
+        let panel = NSOpenPanel()
+        panel.canChooseFiles = false
+        panel.canChooseDirectories = true
+        panel.allowsMultipleSelection = false
+        panel.resolvesAliases = true
+        panel.canDownloadUbiquitousContents = true
+        panel.canResolveUbiquitousConflicts = true
+
+        guard panel.runModal() == .OK, let url = panel.url else { return }
+        Task {
+            await library.relinkFolder(entry.id, to: url)
         }
     }
 
     @ViewBuilder
     private var browserContent: some View {
-        if folders.isEmpty && documents.isEmpty {
+        if folders.isEmpty && resourceLinks.isEmpty && documents.isEmpty {
             if query.isEmpty {
-                ContentUnavailableView("此文件夹为空", systemImage: "folder")
+                ContentUnavailableView {
+                    VStack(spacing: 12) {
+                        Image(nsImage: SystemFileIconProvider.folder())
+                            .resizable()
+                            .interpolation(.high)
+                            .scaledToFit()
+                            .frame(width: 72, height: 64)
+                            .accessibilityHidden(true)
+
+                        Text("此文件夹为空")
+                            .font(KuzioTypography.body(size: 14, weight: .semibold))
+                    }
+                }
             } else {
                 ContentUnavailableView("没有结果", systemImage: "magnifyingglass")
             }
         } else {
             ScrollView {
                 LazyVStack(alignment: .leading, spacing: layout.contentSpacing) {
-                    if !folders.isEmpty {
+                    if !folders.isEmpty || !resourceLinks.isEmpty {
                         LazyVGrid(
                             columns: layout.folderColumns,
                             alignment: .leading,
                             spacing: layout.folderSpacing
                         ) {
                             ForEach(folders) { folder in
-                                LibraryFolderTile(folder: folder) {
+                                LibraryGridItemTile(
+                                    entry: folder,
+                                    icon: SystemFileIconProvider.folder(),
+                                    detail: "\(folder.childIDs.count) 项"
+                                ) {
                                     library.selectFolder(folder.id)
                                 }
                                 .contextMenu {
                                     entryContextMenu(folder)
+                                }
+                            }
+
+                            ForEach(resourceLinks) { resourceLink in
+                                LibraryGridItemTile(
+                                    entry: resourceLink,
+                                    icon: SystemFileIconProvider.file(
+                                        contentTypeIdentifier: resourceLink.externalResource?
+                                            .contentTypeIdentifier,
+                                        filename: resourceLink.externalResource?.lastKnownName
+                                            ?? resourceLink.title
+                                    ),
+                                    detail: nil
+                                ) {
+                                    Task { await library.openEntry(resourceLink.id) }
+                                }
+                                .contextMenu {
+                                    entryContextMenu(resourceLink)
                                 }
                             }
                         }
@@ -237,7 +294,7 @@ struct LibraryBrowserPage: View {
                         LazyVStack(alignment: .leading, spacing: layout.documentSpacing) {
                             ForEach(documents) { document in
                                 LibraryDocumentCard(document: document) {
-                                    Task { await library.openDocument(document.id) }
+                                    Task { await library.openEntry(document.id) }
                                 }
                                 .contextMenu {
                                     entryContextMenu(document)
@@ -265,6 +322,20 @@ struct LibraryBrowserPage: View {
             moveEntry = entry
         } label: {
             Label("移动", systemImage: "folder")
+        }
+
+        if entry.externalResource?.kind == .file {
+            Button {
+                chooseFileToRelink(entry)
+            } label: {
+                Label("重新链接", systemImage: "link")
+            }
+        } else if entry.isFolder, library.canRelinkFolder(entry.id) {
+            Button {
+                chooseFolderToRelink(entry)
+            } label: {
+                Label("重新链接", systemImage: "link")
+            }
         }
 
         Divider()
@@ -322,34 +393,51 @@ struct LibraryBreadcrumb: View {
     }
 }
 
-private struct LibraryFolderTile: View {
-    let folder: LibraryEntry
+private struct LibraryGridItemTile: View {
+    let entry: LibraryEntry
+    let icon: NSImage
+    let detail: String?
     let onOpen: () -> Void
 
     var body: some View {
         Button(action: onOpen) {
             VStack(alignment: .center, spacing: 10) {
-                Image(nsImage: SystemFileIconProvider.folder())
+                Image(nsImage: icon)
                     .resizable()
                     .interpolation(.high)
                     .scaledToFit()
-                    .frame(width: 58, height: 52)
+                    .frame(
+                        width: KuzioControlMetrics.folderIconWidth,
+                        height: KuzioControlMetrics.folderIconHeight
+                    )
+                    .frame(height: KuzioControlMetrics.folderIconContainerHeight)
                     .accessibilityHidden(true)
 
-                Text(folder.title)
+                Text(entry.title)
                     .font(KuzioTypography.body(size: 14, weight: .bold))
                     .multilineTextAlignment(.center)
                     .lineLimit(2)
                     .frame(maxWidth: .infinity)
+                    .frame(
+                        height: KuzioControlMetrics.gridTileTitleHeight,
+                        alignment: .top
+                    )
                     .minimumScaleFactor(0.82)
 
-                Text("\(folder.childIDs.count) 项")
-                    .font(KuzioTypography.caption(size: 11, weight: .semibold))
-                    .foregroundStyle(.secondary)
+                if let detail {
+                    Text(detail)
+                        .font(KuzioTypography.caption(size: 11, weight: .semibold))
+                        .foregroundStyle(.secondary)
+                        .frame(height: KuzioControlMetrics.gridTileDetailHeight)
+                } else {
+                    Spacer(minLength: 0)
+                        .frame(height: KuzioControlMetrics.gridTileDetailHeight)
+                }
             }
             .padding(.horizontal, 12)
             .padding(.vertical, 16)
-            .frame(maxWidth: .infinity, minHeight: 128)
+            .frame(maxWidth: .infinity)
+            .frame(height: KuzioControlMetrics.gridTileHeight)
             .contentShape(Rectangle())
             .glassEffect(
                 Glass.regular.interactive(),
@@ -357,8 +445,8 @@ private struct LibraryFolderTile: View {
             )
         }
         .buttonStyle(.plain)
-        .accessibilityLabel(folder.title)
-        .accessibilityValue("\(folder.childIDs.count) 项")
+        .accessibilityLabel(entry.title)
+        .accessibilityValue(detail ?? "")
     }
 }
 
@@ -370,9 +458,12 @@ private struct LibraryDocumentCard: View {
         Button(action: onOpen) {
             HStack(spacing: 14) {
                 Image(systemName: "doc.text")
-                    .font(.system(size: 24, weight: .regular))
+                    .font(.system(size: KuzioControlMetrics.cardSymbolSize, weight: .semibold))
                     .symbolRenderingMode(.monochrome)
-                    .frame(width: 42, height: 42)
+                    .frame(
+                        width: KuzioControlMetrics.cardIconFrameSize,
+                        height: KuzioControlMetrics.cardIconFrameSize
+                    )
 
                 VStack(alignment: .leading, spacing: 8) {
                     Text(document.title)

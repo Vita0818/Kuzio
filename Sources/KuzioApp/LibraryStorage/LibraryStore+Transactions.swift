@@ -3,11 +3,14 @@ import Foundation
 
 extension LibraryStore {
     func commit(
-        candidate initialCandidate: LibraryManifestV1,
+        candidate initialCandidate: LibraryManifestV2,
         newObjects: [ObjectID: Data],
         createdNodeIDs: [NodeID],
         changedNodeIDs: [NodeID],
         deletedNodeIDs: [NodeID],
+        createdResourceIDs: [ResourceID] = [],
+        changedResourceIDs: [ResourceID] = [],
+        deletedResourceIDs: [ResourceID] = [],
         invalidatesPreviousManifest: Bool,
         purgeObjectIDs: [ObjectID]
     ) throws -> LibraryCommitReceipt {
@@ -21,6 +24,27 @@ extension LibraryStore {
             paths: paths,
             validatesPayloadFiles: false
         )
+
+        let expectedObjectDigests = Dictionary(
+            uniqueKeysWithValues: candidate.nodes.compactMap(\.document?.payload).map {
+                ($0.objectID, $0.sha256)
+            } + candidate.externalResources.map {
+                ($0.locator.objectID, $0.locator.sha256)
+            }
+        )
+        let expectedLocatorKinds = Dictionary(
+            uniqueKeysWithValues: candidate.externalResources.map {
+                ($0.locator.objectID, $0.kind)
+            }
+        )
+        for (objectID, data) in newObjects {
+            guard LibraryStoreIO.sha256Hex(data) == expectedObjectDigests[objectID] else {
+                throw LibraryStoreError.corruptPayload(objectID)
+            }
+            if let kind = expectedLocatorKinds[objectID] {
+                try LibraryManifestValidator.validateLocatorData(data, kind: kind)
+            }
+        }
 
         let transactionDirectory = paths.transactionDirectory(for: transactionID)
         let transactionObjects = transactionDirectory.appendingPathComponent("objects", isDirectory: true)
@@ -75,11 +99,6 @@ extension LibraryStore {
                 to: stagedObject,
                 relativePath: ".state/transactions/\(transactionID.description)/objects/\(objectID.description).payload"
             )
-            guard LibraryStoreIO.sha256Hex(data) == candidate.nodes
-                .compactMap(\.document?.payload)
-                .first(where: { $0.objectID == objectID })?.sha256 else {
-                throw LibraryStoreError.corruptPayload(objectID)
-            }
         }
 
         let purgeIntentURL = paths.purgeIntentURL(for: transactionID)
@@ -125,7 +144,7 @@ extension LibraryStore {
                 }
 
                 try LibraryStoreIO.atomicReplace(
-                    try LibraryStoreIO.encoder().encode(diskManifest),
+                    try Self.encodedManifest(diskManifest),
                     at: paths.previousManifest,
                     relativePath: ".state/previous-manifest.json"
                 )
@@ -165,7 +184,7 @@ extension LibraryStore {
                     at: paths.manifest,
                     relativePath: "manifest.json"
                 )
-                let published = try Self.readManifest(paths: paths, url: paths.manifest)
+                let published = try Self.readCurrentManifest(paths: paths)
                 guard published.revision == candidate.revision,
                       published.lastTransactionID == transactionID else {
                     throw LibraryStoreError.invariantViolation("publish-verification")
@@ -223,13 +242,16 @@ extension LibraryStore {
             createdNodeIDs: createdNodeIDs,
             changedNodeIDs: changedNodeIDs,
             deletedNodeIDs: deletedNodeIDs,
+            createdResourceIDs: createdResourceIDs,
+            changedResourceIDs: changedResourceIDs,
+            deletedResourceIDs: deletedResourceIDs,
             cleanupPending: cleanupPending
         )
     }
 
     func completePublishedPurgeIntents() throws {
         var coordinationError: NSError?
-        var coordinatedResult: Result<LibraryManifestV1, Error>?
+        var coordinatedResult: Result<LibraryManifestV2, Error>?
 
         coordinator.coordinate(
             writingItemAt: paths.root,
@@ -239,7 +261,7 @@ extension LibraryStore {
             coordinatedResult = Result {
                 try paths.validateManagedDirectories()
                 try paths.validateManifestExists()
-                let current = try Self.readManifest(paths: paths, url: paths.manifest)
+                let current = try Self.readCurrentManifest(paths: paths)
                 _ = try LibraryManifestValidator.validate(
                     current,
                     paths: paths,
@@ -327,7 +349,7 @@ extension LibraryStore {
 
     func coordinatedCollectGarbage() throws -> Int {
         var coordinationError: NSError?
-        var coordinatedResult: Result<(LibraryManifestV1, Int), Error>?
+        var coordinatedResult: Result<(LibraryManifestV2, Int), Error>?
 
         coordinator.coordinate(
             writingItemAt: paths.root,
@@ -337,7 +359,7 @@ extension LibraryStore {
             coordinatedResult = Result {
                 try paths.validateManagedDirectories()
                 try paths.validateManifestExists()
-                let current = try Self.readManifest(paths: paths, url: paths.manifest)
+                let current = try Self.readCurrentManifest(paths: paths)
                 _ = try LibraryManifestValidator.validate(
                     current,
                     paths: paths,
@@ -361,7 +383,7 @@ extension LibraryStore {
         return removed
     }
 
-    func collectUnreferencedObjects(current: LibraryManifestV1) throws -> Int {
+    func collectUnreferencedObjects(current: LibraryManifestV2) throws -> Int {
         var referenced = referencedObjectIDs(in: current)
 
         if FileManager.default.fileExists(atPath: paths.previousManifest.path) {
@@ -423,7 +445,17 @@ extension LibraryStore {
         return removed
     }
 
-    private func referencedObjectIDs(in manifest: LibraryManifestV1) -> Set<ObjectID> {
+    private func referencedObjectIDs(in manifest: LibraryManifestV2) -> Set<ObjectID> {
         Set(manifest.nodes.compactMap { $0.document?.payload.objectID })
+            .union(manifest.externalResources.map(\.locator.objectID))
+    }
+
+    private func referencedObjectIDs(in decoded: DecodedLibraryManifest) -> Set<ObjectID> {
+        switch decoded {
+        case .v1(let manifest):
+            return Set(manifest.nodes.compactMap { $0.document?.payload.objectID })
+        case .v2(let manifest):
+            return referencedObjectIDs(in: manifest)
+        }
     }
 }
