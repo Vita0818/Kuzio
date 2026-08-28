@@ -6,6 +6,10 @@ options:
     macOS: "26.0"
   createIntermediateGroups: true
 
+packages:
+  Intatis:
+    path: ../../Intatis
+
 settings:
   base:
     SWIFT_VERSION: "6.0"
@@ -21,7 +25,9 @@ targets:
       - path: Sources/KuzioApp
         excludes:
           - Fonts
-      - path: Sources/KuzioApp/Fonts
+      - path: Sources/KuzioApp/Fonts/JetBrainsMono-OFL.txt
+        buildPhase: resources
+      - path: ../../Intatis/.intatis/runtime-kit/0.66/CodexRuntime
         type: folder
         buildPhase: resources
     settings:
@@ -32,6 +38,19 @@ targets:
         GENERATE_INFOPLIST_FILE: "YES"
         INFOPLIST_KEY_CFBundleDisplayName: Kuzio
         INFOPLIST_KEY_LSApplicationCategoryType: public.app-category.education
+    dependencies:
+      - package: Intatis
+        product: IntatisCore
+      - package: Intatis
+        product: IntatisProtocol
+      - package: Intatis
+        product: IntatisProviders
+      - package: Intatis
+        product: IntatisConversation
+      - package: Intatis
+        product: IntatisCodexRuntime
+      - package: Intatis
+        product: IntatisSharedUI
 
 schemes:
   Kuzio:

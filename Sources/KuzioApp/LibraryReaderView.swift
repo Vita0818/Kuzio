@@ -1,8 +1,10 @@
+import IntatisSharedUI
 import SwiftUI
 
 struct LibraryReaderView: View {
     @Bindable var library: LibraryViewModel
     let document: StoredDocument
+    let onOpenCowork: (LibraryEntry) -> Void
 
     @State private var isEditing = false
     @State private var draft = ""
@@ -75,12 +77,12 @@ struct LibraryReaderView: View {
 
             VStack(alignment: .leading, spacing: 7) {
                 Text(entry?.title ?? document.title)
-                    .font(KuzioTypography.pageTitle())
+                    .font(IntatisTypography.largeTitle(32, .bold))
                     .lineLimit(2)
 
                 if let entry {
                     Text(LibraryMetadataFormatter.metadataLine(for: entry))
-                        .font(KuzioTypography.body(size: 13, weight: .medium))
+                        .font(IntatisTypography.body(13, .medium))
                         .foregroundStyle(.secondary)
                         .lineLimit(1)
                 }
@@ -117,6 +119,17 @@ struct LibraryReaderView: View {
 
                     Menu {
                         Button {
+                            onOpenCowork(entry)
+                        } label: {
+                            Label(
+                                "AI 对话",
+                                systemImage: "bubble.left.and.bubble.right"
+                            )
+                        }
+
+                        Divider()
+
+                        Button {
                             nameOperation = .rename(entry)
                         } label: {
                             Label("重命名", systemImage: "pencil")
@@ -150,7 +163,7 @@ struct LibraryReaderView: View {
     private var contentSurface: some View {
         if isEditing {
             TextEditor(text: $draft)
-                .font(KuzioTypography.body(size: 15))
+                .font(IntatisTypography.body(15, .regular))
                 .lineSpacing(5)
                 .scrollContentBackground(.hidden)
                 .frame(minHeight: 420)
@@ -162,7 +175,7 @@ struct LibraryReaderView: View {
                 options: AttributedString.MarkdownParsingOptions(interpretedSyntax: .full)
             ) {
                 Text(attributed)
-                    .font(KuzioTypography.body(size: 15))
+                    .font(IntatisTypography.body(15, .regular))
                     .lineSpacing(5)
                     .textSelection(.enabled)
                     .frame(maxWidth: .infinity, alignment: .leading)
@@ -207,7 +220,7 @@ private struct LibraryMetadataDisclosure: View {
             .padding(.top, 10)
         } label: {
             Text("信息")
-                .font(KuzioTypography.body(size: 13, weight: .semibold))
+                .font(IntatisTypography.body(13, .semibold))
         }
         .padding(16)
         .glassEffect(Glass.clear, in: .rect(cornerRadius: 16))
@@ -216,11 +229,11 @@ private struct LibraryMetadataDisclosure: View {
     private func metadataRow(_ label: String, _ value: String) -> some View {
         HStack(alignment: .firstTextBaseline, spacing: 14) {
             Text(label)
-                .font(KuzioTypography.metadata())
+                .font(IntatisTypography.metadata(12, .medium))
                 .foregroundStyle(.secondary)
                 .frame(width: 92, alignment: .leading)
             Text(value)
-                .font(KuzioTypography.metadata())
+                .font(IntatisTypography.metadata(12, .medium))
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .textSelection(.enabled)
         }

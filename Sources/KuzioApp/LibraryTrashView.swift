@@ -1,3 +1,4 @@
+import IntatisSharedUI
 import SwiftUI
 
 struct LibraryTrashView: View {
@@ -11,7 +12,7 @@ struct LibraryTrashView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 20) {
             Text("废纸篓")
-                .font(KuzioTypography.pageTitle())
+                .font(IntatisTypography.largeTitle(32, .bold))
 
             if items.isEmpty {
                 ContentUnavailableView("废纸篓为空", systemImage: "trash")
@@ -91,11 +92,11 @@ private struct LibraryTrashCard: View {
 
             VStack(alignment: .leading, spacing: 8) {
                 Text(item.title)
-                    .font(KuzioTypography.cardTitle())
+                    .font(IntatisTypography.headline(16, .semibold))
                     .lineLimit(1)
 
                 Text(LibraryMetadataFormatter.date(item.trashedAt))
-                    .font(KuzioTypography.metadata())
+                    .font(IntatisTypography.metadata(12, .medium))
                     .foregroundStyle(.secondary)
             }
 

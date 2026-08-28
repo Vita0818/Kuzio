@@ -9,39 +9,52 @@
 /* Begin PBXBuildFile section */
 		0881F624FD5965FBBE9CF2D5 /* LibraryPackagePaths.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41BA10A605D102CAB55F0171 /* LibraryPackagePaths.swift */; };
 		09902039B18C6E03C69D3F31 /* LibraryOperationSheets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 333399B70E1AFB9FFB45E37A /* LibraryOperationSheets.swift */; };
-		146F44E186C2070AFDCA9AC1 /* Fonts in Resources */ = {isa = PBXBuildFile; fileRef = 1D4C926801537271FDBEAB9C /* Fonts */; };
 		244288AE872FFFC17C643247 /* LibraryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB46334F678F58CE246484E4 /* LibraryViewModel.swift */; };
 		35279A9AB294C1C8FB36339E /* LibraryStoreError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0023136858A6D6F6DEB15D7D /* LibraryStoreError.swift */; };
 		380499B089D6DB284E866380 /* LibraryBrowserView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AFE098CDDAB8CE75A20B201 /* LibraryBrowserView.swift */; };
+		3EBBFB487E0BA7829C83766E /* IntatisConversation in Frameworks */ = {isa = PBXBuildFile; productRef = E4EB811A0452A204EF1844D7 /* IntatisConversation */; };
+		4540376210C6F09C53BA3E95 /* IntatisProviders in Frameworks */ = {isa = PBXBuildFile; productRef = 2A2EE29450E9FBB4319E226A /* IntatisProviders */; };
 		538755033A00A466DBE3DFE8 /* LibraryManifest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E69C2E96AEFF4A0FCFE8C1E6 /* LibraryManifest.swift */; };
+		56560D98BEBAEDB80C8E0817 /* CodexRuntime in Resources */ = {isa = PBXBuildFile; fileRef = 0CD35F49431B76B7DDFD0F88 /* CodexRuntime */; };
 		5F4EB9C476EA3BF056D05E3B /* KuzioControlMetrics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AFCDDE12761A69591B5E251 /* KuzioControlMetrics.swift */; };
+		65715405FBAF50DF59C9A869 /* KuzioCodexLibraryTools.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF78014762FA048654E85F38 /* KuzioCodexLibraryTools.swift */; };
 		65AAFBB4C146480F70EF52A1 /* LibraryBootstrap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A05E012F795993B64695CB1 /* LibraryBootstrap.swift */; };
+		69366336E33E20070113E20E /* IntatisCodexRuntime in Frameworks */ = {isa = PBXBuildFile; productRef = A27BE0D20910DAC5EE6A53DF /* IntatisCodexRuntime */; };
 		6A88B9AADE67C942EC658C2F /* LibraryRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EFF0E3136857D7A389726CF /* LibraryRootView.swift */; };
 		7D3D09C60B8E10C8E62BBAC2 /* LibraryStoreIO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25E8B51DA2ABF426B3B16625 /* LibraryStoreIO.swift */; };
 		7E1E0962632B241D10695133 /* LibraryIdentifiers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 085E3B6101BE2DA00F962CFA /* LibraryIdentifiers.swift */; };
 		7F2BD8FC806962AC2E513B4E /* LibraryToolProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B906038D97055EA7C9E9F2C /* LibraryToolProvider.swift */; };
+		89FFE5A373A4131D34A0AACF /* KuzioCoworkConversationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73982FBBE9DACB4EE10F2B11 /* KuzioCoworkConversationView.swift */; };
 		8C809D48BCE1904AAEF4A7ED /* LibraryReaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE819D9043DC15FAAD1BA5A7 /* LibraryReaderView.swift */; };
+		B1A97A2B1D784C1C645D53D6 /* JetBrainsMono-OFL.txt in Resources */ = {isa = PBXBuildFile; fileRef = 29816DA6A7D86960AD3AFFF0 /* JetBrainsMono-OFL.txt */; };
 		B77E7B53D56EC1C60C729953 /* LibraryNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1ABF06AB9E98473C2FBA4EA /* LibraryNode.swift */; };
+		B7A140D3E2262C802816F6F0 /* KuzioCodexRuntimeIntegration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36E184C69D86B7B698186DB0 /* KuzioCodexRuntimeIntegration.swift */; };
 		BBA1FFA85C5233A55E83D4EF /* SystemFileIconProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3817D544A3EB80A470110C0D /* SystemFileIconProvider.swift */; };
 		BCABAE5281493808F37E34D9 /* KuzioApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7E19927AC3E2795BF8B4065 /* KuzioApp.swift */; };
+		BEB51BBEC00006A313F6DBF1 /* IntatisCore in Frameworks */ = {isa = PBXBuildFile; productRef = 9C9A1D7D3378731DEF5040AC /* IntatisCore */; };
 		D380CA0E9D31845CA14E9E5A /* LibraryStore+Mutations.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD14FAE8F013AA0F6FA089E7 /* LibraryStore+Mutations.swift */; };
+		D79DA52683FC6B1159DCA8EC /* KuzioCoworkRuntimeProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F3E6C2BB8F9FE571F295573 /* KuzioCoworkRuntimeProfile.swift */; };
+		DE08BA7DD797D04D2EC1E0CE /* IntatisSharedUI in Frameworks */ = {isa = PBXBuildFile; productRef = B2450834880A016B3EE56806 /* IntatisSharedUI */; };
 		ECA92D627268E93359536B04 /* LibraryTrashView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F05A633BBFE11368DB114F55 /* LibraryTrashView.swift */; };
 		ECAADB62ADA57613C000B953 /* LibraryToolControlPlane.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC2A34630CDBD54BEDF1C965 /* LibraryToolControlPlane.swift */; };
+		EE686D35246C3CDDE34FDFF5 /* KuzioCoworkConversationModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ED91EEDE4D227969ED65277 /* KuzioCoworkConversationModel.swift */; };
+		F08849CF38CC755EFB7A96AC /* IntatisProtocol in Frameworks */ = {isa = PBXBuildFile; productRef = 0E4C6D89EB09D0AF351F8959 /* IntatisProtocol */; };
 		F51C04E7EC555DCE892B4FA3 /* LibraryManifestValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF9A7DED6FC10136DA74FC7 /* LibraryManifestValidator.swift */; };
 		F593CB4C99C6D2976FFC900C /* LibraryStore+Transactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D84B5D5E921E7A80EC733BC1 /* LibraryStore+Transactions.swift */; };
-		FD97E11CDBE721CEC70B79BF /* KuzioTypography.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13792CEA9B9B6C345F0A3B0D /* KuzioTypography.swift */; };
 		FDA81E2EDFCE586F25790886 /* LibraryStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D6AC849ED763D1727DB6DDF /* LibraryStore.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		0023136858A6D6F6DEB15D7D /* LibraryStoreError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryStoreError.swift; sourceTree = "<group>"; };
 		085E3B6101BE2DA00F962CFA /* LibraryIdentifiers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryIdentifiers.swift; sourceTree = "<group>"; };
+		0CD35F49431B76B7DDFD0F88 /* CodexRuntime */ = {isa = PBXFileReference; lastKnownFileType = folder; name = CodexRuntime; path = "../../Intatis/.intatis/runtime-kit/0.66/CodexRuntime"; sourceTree = SOURCE_ROOT; };
 		0EFF0E3136857D7A389726CF /* LibraryRootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryRootView.swift; sourceTree = "<group>"; };
-		13792CEA9B9B6C345F0A3B0D /* KuzioTypography.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KuzioTypography.swift; sourceTree = "<group>"; };
 		1AFCDDE12761A69591B5E251 /* KuzioControlMetrics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KuzioControlMetrics.swift; sourceTree = "<group>"; };
-		1D4C926801537271FDBEAB9C /* Fonts */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Fonts; path = Sources/KuzioApp/Fonts; sourceTree = SOURCE_ROOT; };
 		25E8B51DA2ABF426B3B16625 /* LibraryStoreIO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryStoreIO.swift; sourceTree = "<group>"; };
+		29816DA6A7D86960AD3AFFF0 /* JetBrainsMono-OFL.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = "JetBrainsMono-OFL.txt"; sourceTree = "<group>"; };
+		2F3E6C2BB8F9FE571F295573 /* KuzioCoworkRuntimeProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KuzioCoworkRuntimeProfile.swift; sourceTree = "<group>"; };
 		333399B70E1AFB9FFB45E37A /* LibraryOperationSheets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryOperationSheets.swift; sourceTree = "<group>"; };
+		36E184C69D86B7B698186DB0 /* KuzioCodexRuntimeIntegration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KuzioCodexRuntimeIntegration.swift; sourceTree = "<group>"; };
 		3817D544A3EB80A470110C0D /* SystemFileIconProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemFileIconProvider.swift; sourceTree = "<group>"; };
 		3D6AC849ED763D1727DB6DDF /* LibraryStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryStore.swift; sourceTree = "<group>"; };
 		3DF9A7DED6FC10136DA74FC7 /* LibraryManifestValidator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryManifestValidator.swift; sourceTree = "<group>"; };
@@ -49,11 +62,15 @@
 		4A28A9331925C0C9848FD5AD /* Kuzio.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Kuzio.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5AFE098CDDAB8CE75A20B201 /* LibraryBrowserView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryBrowserView.swift; sourceTree = "<group>"; };
 		5B906038D97055EA7C9E9F2C /* LibraryToolProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryToolProvider.swift; sourceTree = "<group>"; };
+		5ED91EEDE4D227969ED65277 /* KuzioCoworkConversationModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KuzioCoworkConversationModel.swift; sourceTree = "<group>"; };
+		73982FBBE9DACB4EE10F2B11 /* KuzioCoworkConversationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KuzioCoworkConversationView.swift; sourceTree = "<group>"; };
 		9A05E012F795993B64695CB1 /* LibraryBootstrap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryBootstrap.swift; sourceTree = "<group>"; };
 		B1ABF06AB9E98473C2FBA4EA /* LibraryNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryNode.swift; sourceTree = "<group>"; };
 		C7E19927AC3E2795BF8B4065 /* KuzioApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KuzioApp.swift; sourceTree = "<group>"; };
 		CE819D9043DC15FAAD1BA5A7 /* LibraryReaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryReaderView.swift; sourceTree = "<group>"; };
+		CF78014762FA048654E85F38 /* KuzioCodexLibraryTools.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KuzioCodexLibraryTools.swift; sourceTree = "<group>"; };
 		D84B5D5E921E7A80EC733BC1 /* LibraryStore+Transactions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LibraryStore+Transactions.swift"; sourceTree = "<group>"; };
+		DA4B9E7BFE4F8E5B7E208258 /* Intatis */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Intatis; path = ../../Intatis; sourceTree = SOURCE_ROOT; };
 		DC2A34630CDBD54BEDF1C965 /* LibraryToolControlPlane.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryToolControlPlane.swift; sourceTree = "<group>"; };
 		DD14FAE8F013AA0F6FA089E7 /* LibraryStore+Mutations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LibraryStore+Mutations.swift"; sourceTree = "<group>"; };
 		E69C2E96AEFF4A0FCFE8C1E6 /* LibraryManifest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryManifest.swift; sourceTree = "<group>"; };
@@ -61,13 +78,56 @@
 		FB46334F678F58CE246484E4 /* LibraryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
+/* Begin PBXFrameworksBuildPhase section */
+		91E400F4B0A28F44757849C1 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BEB51BBEC00006A313F6DBF1 /* IntatisCore in Frameworks */,
+				F08849CF38CC755EFB7A96AC /* IntatisProtocol in Frameworks */,
+				4540376210C6F09C53BA3E95 /* IntatisProviders in Frameworks */,
+				3EBBFB487E0BA7829C83766E /* IntatisConversation in Frameworks */,
+				69366336E33E20070113E20E /* IntatisCodexRuntime in Frameworks */,
+				DE08BA7DD797D04D2EC1E0CE /* IntatisSharedUI in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
 /* Begin PBXGroup section */
 		06BEEBF7E30BEFEE5E1CA005 = {
 			isa = PBXGroup;
 			children = (
+				E87BA4E0F00C107B335D57E5 /* Packages */,
 				E526986F740F357D11548EA6 /* Sources */,
+				476D29296B178998B5979501 /* Vitemis */,
 				4BB2C793BD06E6BFC43D5455 /* Products */,
 			);
+			sourceTree = "<group>";
+		};
+		33380CEB8D51FD7423DE8461 /* .intatis */ = {
+			isa = PBXGroup;
+			children = (
+				580DA0FA0A0FEBBBDE359DE4 /* runtime-kit */,
+			);
+			path = .intatis;
+			sourceTree = "<group>";
+		};
+		40C55B481E1A0FC0C14A4A1F /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				29816DA6A7D86960AD3AFFF0 /* JetBrainsMono-OFL.txt */,
+			);
+			path = Fonts;
+			sourceTree = "<group>";
+		};
+		476D29296B178998B5979501 /* Vitemis */ = {
+			isa = PBXGroup;
+			children = (
+				B1ECFCB067372498606F2673 /* Intatis */,
+			);
+			name = Vitemis;
+			path = ../..;
 			sourceTree = "<group>";
 		};
 		4BB2C793BD06E6BFC43D5455 /* Products */ = {
@@ -78,13 +138,24 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		580DA0FA0A0FEBBBDE359DE4 /* runtime-kit */ = {
+			isa = PBXGroup;
+			children = (
+				D23869BF54BDDB3AB30ED9AA /* 0.66 */,
+			);
+			path = "runtime-kit";
+			sourceTree = "<group>";
+		};
 		5B52D9E8CBC81B3CD89793A8 /* KuzioApp */ = {
 			isa = PBXGroup;
 			children = (
-				1D4C926801537271FDBEAB9C /* Fonts */,
 				C7E19927AC3E2795BF8B4065 /* KuzioApp.swift */,
+				CF78014762FA048654E85F38 /* KuzioCodexLibraryTools.swift */,
+				36E184C69D86B7B698186DB0 /* KuzioCodexRuntimeIntegration.swift */,
 				1AFCDDE12761A69591B5E251 /* KuzioControlMetrics.swift */,
-				13792CEA9B9B6C345F0A3B0D /* KuzioTypography.swift */,
+				5ED91EEDE4D227969ED65277 /* KuzioCoworkConversationModel.swift */,
+				73982FBBE9DACB4EE10F2B11 /* KuzioCoworkConversationView.swift */,
+				2F3E6C2BB8F9FE571F295573 /* KuzioCoworkRuntimeProfile.swift */,
 				5AFE098CDDAB8CE75A20B201 /* LibraryBrowserView.swift */,
 				B1ABF06AB9E98473C2FBA4EA /* LibraryNode.swift */,
 				333399B70E1AFB9FFB45E37A /* LibraryOperationSheets.swift */,
@@ -95,9 +166,26 @@
 				F05A633BBFE11368DB114F55 /* LibraryTrashView.swift */,
 				FB46334F678F58CE246484E4 /* LibraryViewModel.swift */,
 				3817D544A3EB80A470110C0D /* SystemFileIconProvider.swift */,
+				40C55B481E1A0FC0C14A4A1F /* Fonts */,
 				D5C7C6EFBA96AB9D06A5E1FE /* LibraryStorage */,
 			);
 			path = KuzioApp;
+			sourceTree = "<group>";
+		};
+		B1ECFCB067372498606F2673 /* Intatis */ = {
+			isa = PBXGroup;
+			children = (
+				33380CEB8D51FD7423DE8461 /* .intatis */,
+			);
+			path = Intatis;
+			sourceTree = "<group>";
+		};
+		D23869BF54BDDB3AB30ED9AA /* 0.66 */ = {
+			isa = PBXGroup;
+			children = (
+				0CD35F49431B76B7DDFD0F88 /* CodexRuntime */,
+			);
+			path = 0.66;
 			sourceTree = "<group>";
 		};
 		D5C7C6EFBA96AB9D06A5E1FE /* LibraryStorage */ = {
@@ -125,6 +213,14 @@
 			path = Sources;
 			sourceTree = "<group>";
 		};
+		E87BA4E0F00C107B335D57E5 /* Packages */ = {
+			isa = PBXGroup;
+			children = (
+				DA4B9E7BFE4F8E5B7E208258 /* Intatis */,
+			);
+			name = Packages;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -134,6 +230,7 @@
 			buildPhases = (
 				C51F3F621870EBD7759A91FE /* Sources */,
 				1BAA6C7866FE961798F27507 /* Resources */,
+				91E400F4B0A28F44757849C1 /* Frameworks */,
 			);
 			buildRules = (
 			);
@@ -141,6 +238,12 @@
 			);
 			name = Kuzio;
 			packageProductDependencies = (
+				9C9A1D7D3378731DEF5040AC /* IntatisCore */,
+				0E4C6D89EB09D0AF351F8959 /* IntatisProtocol */,
+				2A2EE29450E9FBB4319E226A /* IntatisProviders */,
+				E4EB811A0452A204EF1844D7 /* IntatisConversation */,
+				A27BE0D20910DAC5EE6A53DF /* IntatisCodexRuntime */,
+				B2450834880A016B3EE56806 /* IntatisSharedUI */,
 			);
 			productName = Kuzio;
 			productReference = 4A28A9331925C0C9848FD5AD /* Kuzio.app */;
@@ -170,6 +273,9 @@
 			);
 			mainGroup = 06BEEBF7E30BEFEE5E1CA005;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				01C86127A0363C3D4B2A570A /* XCLocalSwiftPackageReference "../../Intatis" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 4BB2C793BD06E6BFC43D5455 /* Products */;
 			projectDirPath = "";
@@ -185,7 +291,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				146F44E186C2070AFDCA9AC1 /* Fonts in Resources */,
+				56560D98BEBAEDB80C8E0817 /* CodexRuntime in Resources */,
+				B1A97A2B1D784C1C645D53D6 /* JetBrainsMono-OFL.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -197,8 +304,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				BCABAE5281493808F37E34D9 /* KuzioApp.swift in Sources */,
+				65715405FBAF50DF59C9A869 /* KuzioCodexLibraryTools.swift in Sources */,
+				B7A140D3E2262C802816F6F0 /* KuzioCodexRuntimeIntegration.swift in Sources */,
 				5F4EB9C476EA3BF056D05E3B /* KuzioControlMetrics.swift in Sources */,
-				FD97E11CDBE721CEC70B79BF /* KuzioTypography.swift in Sources */,
+				EE686D35246C3CDDE34FDFF5 /* KuzioCoworkConversationModel.swift in Sources */,
+				89FFE5A373A4131D34A0AACF /* KuzioCoworkConversationView.swift in Sources */,
+				D79DA52683FC6B1159DCA8EC /* KuzioCoworkRuntimeProfile.swift in Sources */,
 				65AAFBB4C146480F70EF52A1 /* LibraryBootstrap.swift in Sources */,
 				380499B089D6DB284E866380 /* LibraryBrowserView.swift in Sources */,
 				7E1E0962632B241D10695133 /* LibraryIdentifiers.swift in Sources */,
@@ -410,6 +521,40 @@
 			defaultConfigurationName = Debug;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		01C86127A0363C3D4B2A570A /* XCLocalSwiftPackageReference "../../Intatis" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../../Intatis;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		0E4C6D89EB09D0AF351F8959 /* IntatisProtocol */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = IntatisProtocol;
+		};
+		2A2EE29450E9FBB4319E226A /* IntatisProviders */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = IntatisProviders;
+		};
+		9C9A1D7D3378731DEF5040AC /* IntatisCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = IntatisCore;
+		};
+		A27BE0D20910DAC5EE6A53DF /* IntatisCodexRuntime */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = IntatisCodexRuntime;
+		};
+		B2450834880A016B3EE56806 /* IntatisSharedUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = IntatisSharedUI;
+		};
+		E4EB811A0452A204EF1844D7 /* IntatisConversation */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = IntatisConversation;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = BAAB69486D864E195C833179 /* Project object */;
 }

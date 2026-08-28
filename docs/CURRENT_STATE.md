@@ -1,24 +1,24 @@
 # CURRENT_STATE
 
-最近一次自查日期：2026-08-27
+最近一次自查日期：2026-08-28
 
 ## 当前真实状态总览
 
 - Kuzio 当前工作区实现的是 macOS 26 原生 SwiftUI 虚拟层级资料库；用户已确认核心设计为“库内结构与真实文件/云端结构解耦，节点只链接外部资源”，仍不采用 Rokurics 固定课程层级。
 - `main` 与 `origin/main` 当前位于 `v0.1`；本轮 schema v2、资源链接数据层、测试与文档属于未提交工作区改动，未 add、commit 或 push。
-- 最新源码已经完成前端视觉重做、本地资料库、文件/文件夹递归链接、文件和导入批次的显式重新链接、provider-neutral 工具控制面，以及可组合的工具目录/JSON Schema/严格 wire dispatcher。当前工具层不包含模型 SDK、提示词、聊天 UI、网络服务、工具总和聚合器或 AI runtime；未来内核只需把 `LibraryToolProvider` 作为一个 contributor 并入其他工具来源。2026-08-27 原控制面版本已通过 `swift build`、34-test `swift test`、Xcode Debug/Release App build 并更新安装版；当前 provider 版本的最新验证见下文。
-- Release `0.1`（build `1`）已经安装为 `~/Applications/Kuzio.app`，是 arm64/x86_64 universal app；当前本机安装版使用同一 Developer ID Application 身份、hardened runtime 与 secure timestamp 签名，签名验证通过，可直接从安装路径启动，无需打开 Xcode。
+- 最新源码已经完成前端视觉重做、本地资料库、文件/文件夹递归链接、显式重新链接、provider-neutral工具控制面，以及真正的 Intatis Cowork链路。App只有一个主 `WindowGroup`：左侧学习库，右侧 Harness；folder/document/resource-link context menu与reader“更多”提供“AI 对话”。显式激活后，右栏直接挂载 dependency-owned `IntatisSharedUI.CoworkShell`，Kuzio不实现chat UI；最新Light/Dark Debug App已验证SharedUI composer ready与shutdown，之前安装版真实turn返回过`READY`。
+- Release `0.1`（build `1`）dependency-owned Shared Harness版本已经安装为`~/Applications/Kuzio.app`，是arm64/x86_64 universal app；主App与两个nested runtime使用同一Developer ID Application身份、hardened runtime与secure timestamp，strict/integrity验证通过，可直接从安装路径启动，无需打开Xcode。
 - 2026-08-24 按 Rokurics Mac 源码再次统一全部按钮家族后，已重新运行 `swift build`、26-test `swift test` 与 Xcode Debug App build，并使用隔离 `-KuzioPreviewData` 在 Light/Dark 真实窗口检查 library、reader、editor、trash 与 sheet；可见 circle glass、hit frame 与 SF Symbol 已共同收敛到 36pt / 15pt，不再只有外层 layout frame 为 36pt。
 - 2026-08-26 已修复 circle control“可见圆面 36pt、实际只有 glyph 中心容易点中”的命中错位：共享 label 自身拥有 36×36pt frame 与 circle interaction shape，browser history 和 reader back 均已用可见圆面左右边缘坐标点击通过。folder/resource grid tile 同时固定为 152pt 高，并为两行标题与 detail 各保留固定槽位，长短名称不再改变 glass rectangle 尺寸。
-- 当前技术栈为 Swift 6、SwiftUI、Observation、Foundation、AppKit、Core Text、CryptoKit 与 Uniform Type Identifiers；没有第三方 Swift package runtime dependency。
-- 唯一随 App 分发的第三方资源是官方 JetBrains Mono `v2.304` 四档静态 TTF，许可证为 SIL OFL 1.1。
+- 当前技术栈为 Swift 6、SwiftUI、Observation、Foundation、AppKit、Uniform Type Identifiers，以及唯一 Intatis checkout的`IntatisCore` / `IntatisProtocol` / `IntatisProviders` / `IntatisConversation` / `IntatisCodexRuntime` / `IntatisSharedUI`。进程在任何dependency object前安装一次`IntatisHostApplication.configure(name: "Kuzio")`；runtime/session namespace使用冻结的Kuzio identity。推理route按用户确认继续由`ChatConfigurationImporter` + `ProviderRegistry.responsesRuntimeRoute()`只读Intatis-owned canonical config；credential只进入内存route/child environment，不落Kuzio UI、argv、session instructions、runtime files、日志或文档。Kuzio没有API Key/provider/model设置页，也不复制或替换runtime/UI。
+- App随包封装`CodexRuntime/{arm64,x86_64}` exact `codex-cli 0.145.0-intatis.4`、matching derivation、runtime manifests、SHA inventories、SPDX与完整许可证。产品字体改为只使用`IntatisSharedUI` resource bundle中的JetBrains Mono `v2.304` upright/italic variable TTF，Kuzio额外分发OFL；旧四静态TTF留在源码树但已从SwiftPM/Xcode/App bundle排除。Intatis shared package/runtime/UI provenance继续以Intatis `NOTICE.md`、`ThirdPartyNotices/`和runtime kit为事实源。
 
 ## 当前前端
 
 ### App shell
 
 - 入口：`Sources/KuzioApp/KuzioApp.swift`。
-- 根结构：系统两列 `NavigationSplitView`；sidebar 宽度 min 210 / ideal 236 / max 280，窗口最小 1040×690。
+- 根结构：单一主 `WindowGroup` 内使用系统 `NavigationSplitView`；sidebar 宽度 min 210 / ideal 236 / max 280，detail 再使用原生 `HSplitView`。左侧学习库 min 480 / ideal 720，右侧 Cowork Harness min 440 / ideal 620；窗口最小 1180×690，默认 1520×820。
 - sidebar 只承担稳定产品目的地：`资料库` 与 `废纸篓`；任意深度目录不塞入 sidebar，而在 detail 浏览器中呈现。
 - sidebar 顶部品牌名 `Kuzio` 使用 28pt JetBrains Mono semibold；单行品牌区采用 Intatis/Mopelium 的 18pt 水平、22pt 顶部、12pt 底部比例，全局拉丁文本统一使用同一字体族，中文通过 Apple 字体级联使用系统苹方。
 - sidebar destination button 采用 Rokurics Mac 的 6pt 行间距、13pt SF Symbol、20pt 图标槽、8pt 图文间距、12pt 水平 / 10pt 垂直内边距与 15pt selected glass 圆角。
@@ -35,7 +35,16 @@
 - “此文件夹为空”使用 `NSWorkspace` 返回的 Finder 原生 folder icon，不使用 SF Symbol folder 占位。
 - 点击 file resource-link 会从 object store 读取并校验 bookmark、以 `.withSecurityScope` 解析、平衡 `startAccessingSecurityScopedResource` / `stopAccessingSecurityScopedResource` 生命周期，再通过 `NSWorkspace` 打开原文件；stale bookmark 会在保持 `ResourceID` / `NodeID` 的前提下事务替换。文件离线、移动、权限失效或系统无法打开时明确报错。
 - file resource-link 与可识别导入批次的 virtual folder 右键菜单只增加一个“重新链接”；随后直接使用原生 file-only / folder-only `NSOpenPanel`。没有新增状态文案、说明页、徽标、提示卡片或额外确认弹窗。
+- folder、内部document与file resource-link既有context menu都在首项提供“AI 对话”；reader既有“更多”也提供同一操作，不增加browser toolbar control。操作把selected entry交给右侧`KuzioCoworkHarnessHost`，后者直接渲染`IntatisSharedUI.CoworkShell`，不打开第二窗口，也不包含Kuzio `TextEditor`、消息行、approval dialog、Markdown renderer、Inspector或status rail实现。
 - 不包含录音、转写、AI 总结或固定课程层级。
+
+### Cowork 对话
+
+- `KuzioCoworkConversationTarget` 只携带 harness activation request UUID、选中 `NodeID`、kind、title 与 virtual path。稳定 `cowork_<request-uuid>` 是该 target 的 session identity；每个 session 使用 Application Support / `Kuzio/CoworkSessions/<session-id>/workspace` 与独立 `codex-runtime`，目录 owner-only。
+- `KuzioCoworkHarnessHostModel`只管理`CodexAppServerSession` lifecycle、send/interrupt/approval action，以及public runtime event→`CodeItem` / `CoworkAgentThreadSnapshot`输入；共享Shell拥有实际presentation。session configuration显式保存Kuzio host identity，App Server生成的host名称、environment、registry/policy/toolset/reserved fields不再默认为Intatis。
+- session workspace 的 `AGENTS.md` 把 title/path 明确标为 untrusted display data，并要求从选中 `NodeID` 开始；它不包含 raw external path、bookmark、locator、manifest fragment、credential 或 provider route。
+- `KuzioCodexLibraryTools` 通过官方 `CodexRuntimeDynamicTools` 直接投影 `library_get_state`、`library_list_children`、`library_read_content`。当前 AI 对话只授予 `read_structure` + `read_content`，不广告任何 library mutation；binary/directory/HTTPS 内容仍按既有工具合同明确失败。
+- 未选择target时右栏只显示`Cowork Harness`占位，不创建runtime。关闭右栏、切换target或关闭主窗口会shutdown当前runtime；本轮最新Light/Dark实测App始终只有一个标准窗口，右栏AX tree逐字出现SharedUI placeholder `Give Main a project task...`、dependency Send和close action，填写但不发送本地草稿后Send启用，证明runtime ready；清空并关闭后恢复占位且没有Kuzio runtime残留。当前没有独立历史session列表或手工reopen UI。
 
 ## 当前工具控制面
 
@@ -48,7 +57,7 @@
 - 所有 structure mutation 必须携带 `expected_revision`，并返回 published revision、transaction ID 和 changed node IDs；revision conflict 不自动重试或合并。
 - 工具只接受 `NodeID` 和虚拟 parent，不接受 raw path、URL、bookmark bytes、manifest fragment 或 object-store key。external resource content 仍通过现有 `ResourceID`、immutable locator 与 security-scoped access 读取，结果不暴露真实路径。
 - 内容读取按 byte offset 分段，单次默认 64 KiB、上限 256 KiB，并返回精确 `nextByteOffset`。当前只支持内部 UTF-8 document 与已链接本机 UTF-8 file；binary、directory 和 HTTPS 内容明确失败，不调用替代 parser/backend。
-- 精确 tool name、JSON Schema、调用参数、结果与稳定错误码见 `docs/TOOL_CALLING.md`。当前没有任何模型/runtime adapter 或工具总和聚合器实例化这套 provider。
+- 精确 tool name、JSON Schema、调用参数、结果与稳定错误码见 `docs/TOOL_CALLING.md`。完整 provider 仍有 8 个工具；Cowork host 以 read-only capability 实例化其中 3 个，经最薄 JSONValue/spec/call/result bridge 交给 App Server。App Server 继续拥有 agent loop、Cowork 协作、工具选择和 approval，不存在第二 runtime、MCP translator 或执行 fallback。
 
 ## 当前可移植文件系统
 
@@ -97,6 +106,9 @@ Default.kuzio/
 - 2026-08-27 已用最新 Release 更新安装版并实际执行一个 165-file legacy course 的文件夹重连：production revision 只从 16 增至 17，四个 root child `NodeID`、457 个 resource 总数与外部样本文件 SHA-256 均保持不变；165 个资源获得同一 `ImportID`，manifest 仍不含绝对路径，重启安装版后嵌套文件可打开。
 - 2026-08-27 工具控制面完成后再次从全新 derived data 构建 Release，并以同一 Developer ID Application 身份、hardened runtime 与 secure timestamp 更新 `~/Applications/Kuzio.app`。安装副本的 bundle identifier、`0.1` / build `1`、arm64/x86_64、可执行文件、四个字体资源与签名校验均通过；从安装路径启动后 production revision 仍为 17，三门课程和根文件可见，课程内真实 PDF 链接发起打开时没有 Kuzio 错误，本轮没有 mutation production library。
 - 2026-08-27 可组合工具 provider 完成后又从独立 derived data 全新构建 Release，保持同一 Developer ID、hardened runtime 与 secure timestamp 更新 `~/Applications/Kuzio.app`。安装副本与 fresh Release executable 完全一致；bundle identifier、`0.1` / build `1`、arm64/x86_64、四个字体 checksum 与 strict signature 均通过。从最终安装路径启动后 production revision 仍为 17，三门课程和 `Syllabus.md` 可见；点击既有 `Syllabus.md` 外部链接没有 Kuzio 错误，未执行任何资料库 mutation。
+- 2026-08-28 Cowork 功能从独立 derived data 完成 universal Release，分别签署 arm64/x86_64 nested Codex executables、刷新 manifest/SHA inventory 后再签顶层 App；主 App 与两个 runtime 都使用同一 Developer ID、hardened runtime 与 secure timestamp，并通过 strict signature 与 Intatis `validate-codex-runtime.sh`。`~/Applications/Kuzio.app` 已原子更新，installed executable 与 fresh Release 完全一致；从安装路径启动后 production revision 仍为 17，三门课程和 `Syllabus.md` 可见，真实外部链接打开无 Kuzio 错误。production folder Cowork 对无敏感、禁止工具的测试消息返回 `READY`，显示 reasoning activity 与 7,138-token usage；没有调用 library tool或 mutation library。
+- 2026-08-28 单窗口双栏版本再次从全新 derived data 构建并原子更新 `~/Applications/Kuzio.app`。installed executable 与 fresh Release 完全一致；bundle identifier、`0.1` / build `1`、arm64/x86_64、四个字体 checksum、outer seal 与两个 runtime 的独立签名/manifest/SHA 校验均通过。从安装路径启动后只有一个标准窗口，production 三门课程与 `Syllabus.md` 可见，真实外部链接打开无 Kuzio 错误；`UCB-CS61A` 在右侧 harness 到达 ready，关闭后恢复空态且无 Kuzio runtime process。production revision 保持 17，578 个节点、457 个 resource 与 manifest SHA-256 均未变化；本轮没有发送新的模型 turn，也没有 mutation library。
+- 2026-08-28 最新Intatis host identity + dependency-owned Shared Harness版本又从全新derived data完成universal Release。arm64/x86_64 nested Codex先分别使用同一Developer ID、hardened runtime、secure timestamp签名，再按Intatis packaging逻辑刷新manifest/SHA inventory并签outer App；三份strict signature、两架构`validate-codex-runtime.sh`与outer seal均通过。`~/Applications/Kuzio.app`已原子更新，installed executable与fresh Release SHA-256同为`b3379e0250a647fc0b32dd3ac85915b8ca8b4734b5118facab3a3e1746c4694d`。App bundle只有SharedUI两个variable TTF和Kuzio OFL。正式路径启动后production三门课程与`Syllabus.md`可见，真实链接打开无Kuzio错误；`UCB-CS61A`右栏AX确认`CoworkShell`和SharedUI composer。安装版发送无敏感、明确禁止工具的测试消息后，SharedUI真实渲染用户消息、`READY` root reply、reasoning时间与7,186-token usage；message AX ID以`kuzio.message...`命名，未调用library tool。close后runtime drain，验证session已移入废纸篓。revision仍17，578节点、457 resources与manifest SHA-256`a045…f703`不变，未mutation library。
 
 ## DEBUG 边界
 
@@ -106,10 +118,12 @@ Default.kuzio/
 
 ## 测试源码状态
 
-- `Tests/KuzioAppTests/LibraryStoreTests.swift` 当前包含 38 个测试方法。
+- `LibraryStoreTests.swift` 保持 38 个测试；`KuzioCoworkRuntimeTests.swift` 当前 5 个测试，合计 43 tests。
 - 原 18 个文件系统测试继续覆盖复制、任意深度、稳定 ID、并发、恢复与安全；新增 8 个方向覆盖虚拟树/真实目标解耦、alias 生命周期、relink 身份、v1→v2 迁移、locator digest、HTTPS locator、陈旧 store GC 与协调读取。
 - recursive linked-tree / batch relink 继续由 4 个方向覆盖；新增 4 个工具层方向覆盖完整结构 mutation、capability/revision fail-closed、UTF-8 分段读取与真实 bookmark 外部文本读取。
 - 新增 4 个 provider 方向覆盖 capability-scoped definitions/JSON Schema、7 个结构工具的完整 JSON wire 调用链、内容工具默认参数与 snake_case/null envelope，以及 unknown/extra/malformed/oversized/unauthorized 调用 fail-closed。
+- 5个Cowork方向覆盖：read-only dynamic-tool surface与真实provider wire envelope；process-first `Kuzio` host identity和`INTATIS_CONFIG` shared-config owner派生；Intatis-compatible fixture→memory-only route且description redaction；`.cowork` configuration、stable session root、owner-only selected-node instructions、无credential/path泄漏、target Codable identity；主scene唯一`WindowGroup`、library/harness `HSplitView`、direct `CoworkShell`、Harness源码无自制composer/renderer/approval UI。
+- 2026-08-28 最新内核适配源码已运行`swift build`、43-test `swift test`、XcodeGen 2.45.4、Xcode Debug/全新universal Release builds，全部通过；Light/Dark DEBUG preview已检查单窗口双栏、右栏空态、folder AI入口、dependency-owned CoworkShell/composer ready、关闭恢复空态与process drain。SharedUI版本的签名安装、字体/runtime inventory与production只读验收也已完成；上一版自制UI安装证据只保留为历史，不再代表当前产品。
 - 2026-08-27 已重新运行 `swift build`、`swift test`、Xcode Debug App build 与独立 derived data 的全新 Release App build：38 tests，0 failures，正式 App target 构建成功；同身份安装与 production 只读验收也已完成。
 
 ## 当前风险与未完成项
@@ -119,7 +133,8 @@ Default.kuzio/
 - 文件和文件夹多选、递归一次性投影、嵌套文件打开、单文件重连与导入批次重连已经实现；源目录后续变化的显式刷新/对账、HTTPS 添加与打开、File Provider 离线下载进度尚未实现。隐藏项目被跳过，符号链接和其他非常规文件会明确失败。
 - 正式 target 当前未启用 App Sandbox；本轮已验证安装版可创建、解析并使用只读 security-scoped bookmark，但 Sandbox entitlement 与现有默认库向 container 的迁移仍未确认，不得描述为已完成 sandbox 发布配置。
 - 当前没有同步、账号、网络抓取或跨设备协作；本机 Developer ID + secure timestamp 安装方式已经确认，但公证、对外发布与自动更新服务仍未配置。
-- 工具目录、schema、严格 dispatcher 与结果 envelope 已实现，但具体模型 runtime、完整工具总和聚合器、adapter 生命周期与用户授权入口尚未接入；不得把工具层描述为已接入 AI。
+- Cowork runtime、root streaming、usage、read-only dynamic tools registration 与双架构 executable bundle 已接入；真实 provider turn 已返回 `READY`。dynamic tool callback、child delegation 与完整 approval round trip 尚未触发，不能描述为已线上验收。当前 AI tools 不支持 library mutation、binary/PDF parsing、directory/HTTPS content 或外部目标写入。
+- 当前唯一 Intatis checkout存在大量既有未提交的host identity/runtime/SharedUI等内核改动；Kuzio本轮只读消费当前源码且SwiftPM/Xcode构建通过，没有修改Intatis。跨机器或clean checkout可复现性取决于上游先按Intatis自身流程落盘；`IntatisConversation`/`IntatisSharedUI`又不属于v1 frozen runtime symbol list，Kuzio不得复制、pin第二checkout或增加compatibility facade兜底。
 - XCUITest、VoiceOver 全流程、大型 100k-node 压力和故障注入仍未覆盖。
 
 ## 工作区与文档冲突

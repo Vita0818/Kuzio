@@ -1,3 +1,4 @@
+import IntatisSharedUI
 import SwiftUI
 
 enum LibraryNameOperation: Identifiable {
@@ -53,7 +54,7 @@ struct LibraryNameSheet: View {
         NavigationStack {
             Form {
                 TextField("名称", text: $value)
-                    .font(KuzioTypography.body())
+                    .font(IntatisTypography.body(14, .regular))
             }
             .formStyle(.grouped)
             .navigationTitle(operation.title)
@@ -71,7 +72,7 @@ struct LibraryNameSheet: View {
                 }
             }
         }
-        .font(KuzioTypography.body())
+        .font(IntatisTypography.body(14, .regular))
         .frame(width: 420, height: 190)
     }
 }
@@ -103,10 +104,10 @@ struct LibraryMoveSheet: View {
                         .accessibilityHidden(true)
                     VStack(alignment: .leading, spacing: 3) {
                         Text(destination.entry.title)
-                            .font(KuzioTypography.body(size: 13, weight: .semibold))
+                            .font(IntatisTypography.body(13, .semibold))
                             .lineLimit(1)
                         Text(destination.path)
-                            .font(KuzioTypography.caption(size: 11, weight: .medium))
+                            .font(IntatisTypography.caption(11, .medium))
                             .foregroundStyle(.secondary)
                             .lineLimit(1)
                             .truncationMode(.middle)
@@ -132,7 +133,7 @@ struct LibraryMoveSheet: View {
                 }
             }
         }
-        .font(KuzioTypography.body())
+        .font(IntatisTypography.body(14, .regular))
         .frame(width: 520, height: 460)
     }
 }

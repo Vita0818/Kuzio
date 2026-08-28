@@ -1,15 +1,19 @@
 # TOOL_CALLING
 
-本文定义 Kuzio 当前 provider-neutral 工具调用契约。当前版本提供强类型 `LibraryToolControlPlane`，以及可组合的 `LibraryToolProvider` 工具目录、JSON Schema、严格参数解码和统一结果 envelope；不包含模型 SDK、提示词、聊天界面、网络服务、MCP server、工具总和聚合器或其他 AI runtime。
+本文定义 Kuzio 当前 provider-neutral 工具调用契约。当前版本提供强类型 `LibraryToolControlPlane`、完整 8-tool `LibraryToolProvider`，以及已上线的 read-only Intatis Cowork projection。工具层自身仍不包含提示词、provider/network route、MCP server 或另一套 agent loop；这些生命周期由 `IntatisCodexRuntime` App Server 持有。
 
 ## 执行边界
 
 ```text
-未来 runtime 工具总和聚合器
+CodexAppServerSession（mode: cowork）
         |
-        | 合并其他工具来源与 Kuzio definitions
+        | official dynamicTools callback
         v
-LibraryToolProvider
+KuzioCodexLibraryTools
+        |
+        | JSONValue/spec/call/result 最薄转换
+        v
+LibraryToolProvider（read-only capability instance）
         |
         | strict JSON object -> LibraryToolCall
         v
@@ -30,12 +34,13 @@ manifest.json + immutable objects
 - 结构 mutation 全部复用现有 `LibraryStore` transaction，不存在第二套 backend、shadow state 或 AI 专用数据层。
 - 工具结果不返回真实路径或 bookmark；读取外部文件时，控制面内部解析现有只读 app-scoped security-scoped bookmark，并平衡 security-scope 生命周期。
 - 当前不提供永久删除、外部文件写入、任意路径读取、自动重连、文件夹刷新/镜像或网络资源下载工具。
+- Cowork conversation 的 selected context 由 session workspace instructions 提供 canonical `NodeID`；tool arguments/result 仍不携带 raw path、bookmark 或 credential。当前 selection 是对话起点，不是另建 hierarchy/index。
 
 ## 工具提供者
 
 - `LibraryToolProvider.providerID` 当前固定为 `com.vitemis.kuzio.library-tools.v1`；任何不兼容的名称、schema、默认值或 wire 语义变化都必须提升该版本。
 - `definitions` 按固定顺序提供当前实例获授权的工具名称、model-facing description、标准 JSON Schema object 与所需 capability。schema 全部使用 `additionalProperties: false`。
-- `LibraryToolProvider` 只是未来完整模型工具面的一个 contributor，不声明这 8 个工具是模型唯一可用的工具。未来 runtime 负责把它们与其他已授权工具来源合并，并对名称冲突 fail closed。
+- `LibraryToolProvider` 是完整模型工具面的一个 contributor，不声明这 8 个工具是模型唯一可用的工具。当前 `KuzioCodexLibraryTools` 通过官方 App Server dynamic-tools extension 合并 read-only subset；App Server 仍可同时拥有原生 Cowork controls，并对名称冲突 fail closed。
 - provider 接收 `LibraryToolInvocation(name:argumentsJSON:)`。`argumentsJSON` 必须是最多 65,536 bytes 的 JSON object；未知字段、缺少必填字段、错误类型、非 canonical UUID、负 index、超限内容参数和未知 tool name 都返回 `invalid_arguments`。
 - capability 不仅过滤 `definitions`；调用方即使绕过目录直接请求未授权的已知工具，provider 也会在参数解码和 Store 调用前返回 `permission_denied`。
 - provider 只做目录发布、严格 JSON→强类型转换、控制面分发与强类型→JSON envelope 编码。它不重试、不修改参数、不实现模型循环，也不拥有第二份权限或资料库状态。
@@ -51,6 +56,16 @@ manifest.json + immutable objects
 | `mutate_structure` | `library_create_folder`、`library_rename_node`、`library_move_node`、`library_trash_node`、`library_restore_node` |
 
 缺少 capability 时返回 `permission_denied`，控制面不会调用 Store。
+
+当前 Cowork session 固定只授予 `read_structure` 与 `read_content`，因此其 specs 恰好为：
+
+```text
+library_get_state
+library_list_children
+library_read_content
+```
+
+五个 `mutate_structure` 工具只属于完整 provider 合同，当前不会向 Cowork 广告；绕过 specs 的动态调用也没有对应 App Server registration。后续启用 mutation 必须先新增用户确认的权限与产品行为合同，不能只扩大 capability set。
 
 ## Wire 约定
 
@@ -72,7 +87,7 @@ manifest.json + immutable objects
 - 所有 ID 必须是 canonical lowercase UUID string。
 - `index` 是从 `0` 开始的 child index；省略或 `null` 表示追加到目标文件夹末尾。恢复到原位置的特殊规则见 `library_restore_node`。
 - 所有结构 mutation 都必须传 `expected_revision`。调用方应使用最近一次读取或 mutation 成功结果中的 revision；不得猜测 revision。
-- `LibraryToolProvider` 已负责 JSON 与 `LibraryToolCall` 的严格转换，以及 `LibraryToolExecutionResult` 的 JSON 编码。未来 runtime adapter 只负责把其原生 tool spec/call/result 类型接到 provider，不得自行执行、重试或改写库操作。
+- `LibraryToolProvider` 已负责 JSON 与 `LibraryToolCall` 的严格转换，以及 `LibraryToolExecutionResult` 的 JSON 编码。当前 `KuzioCodexLibraryTools` 只把 App Server `JSONValue` 编码为 provider arguments，并把稳定 JSON envelope 返回成 dynamic content；不得自行执行、重试或改写库操作。
 
 建议的成功 envelope：
 
@@ -335,4 +350,4 @@ mutation result
     -> 使用返回的新 revision 继续，或重新读取结构
 ```
 
-未来接入具体模型时，由 runtime 把 `LibraryToolProvider.definitions` 并入其他工具来源形成完整工具总和，再以最薄 adapter 转发 invocation/result；不得把 provider 类型、prompt、重试策略或模型状态写入 `LibraryStore`、manifest schema 或虚拟 hierarchy。
+当前 `IntatisCodexRuntime` 已把 capability-filtered `LibraryToolProvider.definitions` 经 `CodexRuntimeDynamicTools` 并入 Cowork 工具总和，并以最薄 adapter 转发 invocation/result；不得把 provider 类型、prompt、重试策略或模型状态写入 `LibraryStore`、manifest schema 或 virtual hierarchy，也不得在 failure 时改走另一 runtime/translator/backend。

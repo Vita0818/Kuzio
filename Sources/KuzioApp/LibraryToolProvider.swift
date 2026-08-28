@@ -90,6 +90,15 @@ enum LibraryToolProviderResult: Encodable, Sendable {
     case success(tool: LibraryToolName, output: LibraryToolOutput)
     case failure(tool: String, error: LibraryToolFailure)
 
+    var isSuccess: Bool {
+        switch self {
+        case .success:
+            true
+        case .failure:
+            false
+        }
+    }
+
     func encodedJSON() throws -> Data {
         let encoder = JSONEncoder()
         encoder.outputFormatting = [.sortedKeys, .withoutEscapingSlashes]

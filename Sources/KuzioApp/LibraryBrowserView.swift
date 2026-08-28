@@ -1,4 +1,5 @@
 import AppKit
+import IntatisSharedUI
 import SwiftUI
 
 struct LibraryBrowserLayout {
@@ -33,6 +34,7 @@ struct LibraryBrowserLayout {
 
 struct LibraryBrowserPage: View {
     @Bindable var library: LibraryViewModel
+    let onOpenCowork: (LibraryEntry) -> Void
     @State private var nameOperation: LibraryNameOperation?
     @State private var moveEntry: LibraryEntry?
 
@@ -57,7 +59,7 @@ struct LibraryBrowserPage: View {
     var body: some View {
         VStack(alignment: .leading, spacing: layout.rootSpacing) {
             Text("资料库")
-                .font(KuzioTypography.pageTitle())
+                .font(IntatisTypography.largeTitle(32, .bold))
                 .lineLimit(1)
 
             navigationRow
@@ -144,7 +146,7 @@ struct LibraryBrowserPage: View {
             }
         } else {
             Label("搜索", systemImage: "magnifyingglass")
-                .font(KuzioTypography.body(size: 13, weight: .semibold))
+                .font(IntatisTypography.body(13, .semibold))
         }
     }
 
@@ -242,7 +244,7 @@ struct LibraryBrowserPage: View {
                             .accessibilityHidden(true)
 
                         Text("此文件夹为空")
-                            .font(KuzioTypography.body(size: 14, weight: .semibold))
+                            .font(IntatisTypography.body(14, .semibold))
                     }
                 }
             } else {
@@ -313,6 +315,17 @@ struct LibraryBrowserPage: View {
     @ViewBuilder
     private func entryContextMenu(_ entry: LibraryEntry) -> some View {
         Button {
+            onOpenCowork(entry)
+        } label: {
+            Label(
+                "AI 对话",
+                systemImage: "bubble.left.and.bubble.right"
+            )
+        }
+
+        Divider()
+
+        Button {
             nameOperation = .rename(entry)
         } label: {
             Label("重命名", systemImage: "pencil")
@@ -365,7 +378,7 @@ struct LibraryBreadcrumb: View {
                 ForEach(Array(path.enumerated()), id: \.element.id) { index, entry in
                     if index > 0 {
                         Text("/")
-                            .font(KuzioTypography.metadata(size: 12, weight: .semibold))
+                            .font(IntatisTypography.metadata(12, .semibold))
                             .foregroundStyle(.secondary)
                             .accessibilityHidden(true)
                     }
@@ -374,9 +387,9 @@ struct LibraryBreadcrumb: View {
                         onSelect(entry)
                     } label: {
                         Text(entry.title)
-                            .font(KuzioTypography.metadata(
-                                size: 12,
-                                weight: index == path.count - 1 ? .semibold : .medium
+                            .font(IntatisTypography.metadata(
+                                12,
+                                index == path.count - 1 ? .semibold : .medium
                             ))
                             .foregroundStyle(index == path.count - 1 ? .primary : .secondary)
                             .lineLimit(1)
@@ -414,7 +427,7 @@ private struct LibraryGridItemTile: View {
                     .accessibilityHidden(true)
 
                 Text(entry.title)
-                    .font(KuzioTypography.body(size: 14, weight: .bold))
+                    .font(IntatisTypography.body(14, .bold))
                     .multilineTextAlignment(.center)
                     .lineLimit(2)
                     .frame(maxWidth: .infinity)
@@ -426,7 +439,7 @@ private struct LibraryGridItemTile: View {
 
                 if let detail {
                     Text(detail)
-                        .font(KuzioTypography.caption(size: 11, weight: .semibold))
+                        .font(IntatisTypography.caption(11, .semibold))
                         .foregroundStyle(.secondary)
                         .frame(height: KuzioControlMetrics.gridTileDetailHeight)
                 } else {
@@ -467,11 +480,11 @@ private struct LibraryDocumentCard: View {
 
                 VStack(alignment: .leading, spacing: 8) {
                     Text(document.title)
-                        .font(KuzioTypography.cardTitle())
+                        .font(IntatisTypography.headline(16, .semibold))
                         .lineLimit(1)
 
                     Text(LibraryMetadataFormatter.metadataLine(for: document))
-                        .font(KuzioTypography.metadata())
+                        .font(IntatisTypography.metadata(12, .medium))
                         .foregroundStyle(.secondary)
                         .lineLimit(1)
                 }

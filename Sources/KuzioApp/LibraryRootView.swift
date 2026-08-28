@@ -1,15 +1,33 @@
+import IntatisSharedUI
 import SwiftUI
 
 struct LibraryRootView: View {
     @Bindable var library: LibraryViewModel
     @State private var columnVisibility: NavigationSplitViewVisibility = .automatic
+    @State private var coworkTarget: KuzioCoworkConversationTarget?
 
     var body: some View {
         NavigationSplitView(columnVisibility: $columnVisibility) {
             LibrarySidebar(library: library)
                 .navigationSplitViewColumnWidth(min: 210, ideal: 236, max: 280)
         } detail: {
-            detail
+            HSplitView {
+                learningLibrary
+                    .frame(
+                        minWidth: 480,
+                        idealWidth: 720,
+                        maxWidth: .infinity,
+                        maxHeight: .infinity
+                    )
+
+                coworkHarness
+                    .frame(
+                        minWidth: 440,
+                        idealWidth: 620,
+                        maxWidth: .infinity,
+                        maxHeight: .infinity
+                    )
+            }
         }
         .navigationTitle("")
         .toolbar(removing: .title)
@@ -31,21 +49,64 @@ struct LibraryRootView: View {
     }
 
     @ViewBuilder
-    private var detail: some View {
+    private var learningLibrary: some View {
         if library.isLoading || library.snapshot == nil {
             ProgressView()
         } else {
             switch library.destination {
             case .library:
                 if let document = library.activeDocument {
-                    LibraryReaderView(library: library, document: document)
+                    LibraryReaderView(
+                        library: library,
+                        document: document,
+                        onOpenCowork: activateCowork
+                    )
                 } else {
-                    LibraryBrowserPage(library: library)
+                    LibraryBrowserPage(
+                        library: library,
+                        onOpenCowork: activateCowork
+                    )
                 }
             case .trash:
                 LibraryTrashView(library: library)
             }
         }
+    }
+
+    @ViewBuilder
+    private var coworkHarness: some View {
+        if let target = coworkTarget {
+            KuzioCoworkHarnessHost(
+                library: library,
+                target: target,
+                onClose: {
+                    coworkTarget = nil
+                }
+            )
+            .id(target.requestID)
+        } else {
+            ContentUnavailableView {
+                Label(
+                    "Cowork Harness",
+                    systemImage: "bubble.left.and.bubble.right"
+                )
+                .font(IntatisTypography.body(15, .semibold))
+            } description: {
+                Text("在左侧文件夹或文件的菜单中选择“AI 对话”。")
+                    .font(IntatisTypography.body(13, .regular))
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .accessibilityIdentifier("cowork.harness.empty")
+        }
+    }
+
+    private func activateCowork(_ entry: LibraryEntry) {
+        let path = library.snapshot?.path(to: entry.id).map(\.title)
+            ?? [entry.title]
+        coworkTarget = KuzioCoworkConversationTarget(
+            entry: entry,
+            virtualPath: path
+        )
     }
 }
 
@@ -55,7 +116,7 @@ private struct LibrarySidebar: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             Text("Kuzio")
-                .font(KuzioTypography.brand(size: 28))
+                .font(IntatisTypography.brand(28, .semibold))
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.horizontal, 18)
                 .padding(.top, 22)
@@ -103,9 +164,9 @@ private struct LibrarySidebar: View {
                 .frame(width: KuzioControlMetrics.sidebarIconFrameWidth)
 
             Text(destination.title)
-                .font(KuzioTypography.body(
-                    size: 13,
-                    weight: isSelected ? .semibold : .medium
+                .font(IntatisTypography.body(
+                    13,
+                    isSelected ? .semibold : .medium
                 ))
 
             Spacer(minLength: 0)
