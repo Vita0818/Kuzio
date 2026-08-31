@@ -78,10 +78,7 @@ struct LibraryRootView: View {
         if let target = coworkTarget {
             KuzioCoworkHarnessHost(
                 library: library,
-                target: target,
-                onClose: {
-                    coworkTarget = nil
-                }
+                target: target
             )
             .id(target.requestID)
         } else {

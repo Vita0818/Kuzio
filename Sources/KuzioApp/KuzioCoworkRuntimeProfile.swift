@@ -1,3 +1,4 @@
+import CryptoKit
 import Foundation
 import IntatisCodexRuntime
 import IntatisCore
@@ -91,9 +92,104 @@ enum KuzioCoworkRuntimeError: LocalizedError, Equatable {
 }
 
 struct KuzioCoworkRuntimeProfile {
+    struct InferenceProfile: Sendable {
+        let binding: AgentInferenceBinding
+        let providerID: String
+        let providerTitle: String
+        let modelID: String
+        let modelTitle: String
+        let route: ResponsesRuntimeRoute
+    }
+
+    struct ResolvedConfiguration: Sendable {
+        let profiles: [InferenceProfile]
+        let selectedBinding: AgentInferenceBinding
+
+        var selectedProfile: InferenceProfile {
+            profiles.first { $0.binding == selectedBinding }!
+        }
+    }
+
     struct Prepared: Sendable {
         let sessionID: SessionID
+        let inferenceProfiles: [InferenceProfile]
+        let selectedInferenceBinding: AgentInferenceBinding
         let configuration: CodexRuntimeConfiguration
+
+        private let workspaceURL: URL
+        private let runtimeRootURL: URL
+        private let dynamicTools: CodexRuntimeDynamicTools
+        private let applicationIdentity: IntatisHostApplicationIdentity
+
+        init(
+            sessionID: SessionID,
+            inferenceProfiles: [InferenceProfile],
+            selectedInferenceBinding: AgentInferenceBinding,
+            workspaceURL: URL,
+            runtimeRootURL: URL,
+            dynamicTools: CodexRuntimeDynamicTools,
+            applicationIdentity: IntatisHostApplicationIdentity
+        ) throws {
+            self.sessionID = sessionID
+            self.inferenceProfiles = inferenceProfiles
+            self.selectedInferenceBinding = selectedInferenceBinding
+            self.workspaceURL = workspaceURL
+            self.runtimeRootURL = runtimeRootURL
+            self.dynamicTools = dynamicTools
+            self.applicationIdentity = applicationIdentity
+            self.configuration = try Self.makeConfiguration(
+                sessionID: sessionID,
+                profiles: inferenceProfiles,
+                binding: selectedInferenceBinding,
+                workspaceURL: workspaceURL,
+                runtimeRootURL: runtimeRootURL,
+                dynamicTools: dynamicTools,
+                applicationIdentity: applicationIdentity
+            )
+        }
+
+        func configuration(
+            for binding: AgentInferenceBinding
+        ) throws -> CodexRuntimeConfiguration {
+            try Self.makeConfiguration(
+                sessionID: sessionID,
+                profiles: inferenceProfiles,
+                binding: binding,
+                workspaceURL: workspaceURL,
+                runtimeRootURL: runtimeRootURL,
+                dynamicTools: dynamicTools,
+                applicationIdentity: applicationIdentity
+            )
+        }
+
+        private static func makeConfiguration(
+            sessionID: SessionID,
+            profiles: [InferenceProfile],
+            binding: AgentInferenceBinding,
+            workspaceURL: URL,
+            runtimeRootURL: URL,
+            dynamicTools: CodexRuntimeDynamicTools,
+            applicationIdentity: IntatisHostApplicationIdentity
+        ) throws -> CodexRuntimeConfiguration {
+            guard let profile = profiles.first(where: {
+                $0.binding == binding
+            }) else {
+                throw KuzioCoworkRuntimeError.unsupportedConfiguration
+            }
+            let route = profile.route
+            return CodexRuntimeConfiguration(
+                sessionID: sessionID,
+                mode: .cowork,
+                workspaceURL: workspaceURL,
+                runtimeRootURL: runtimeRootURL,
+                route: route,
+                approvalReviewer: .automatic,
+                reasoningEffort: route.reasoningEffort,
+                dynamicTools: dynamicTools,
+                pauseActiveGoalBeforeResume: true,
+                hostApplicationIdentity: applicationIdentity
+            )
+        }
     }
 
     static func prepare(
@@ -122,7 +218,7 @@ struct KuzioCoworkRuntimeProfile {
             }
         }
 
-        let route = try await resolveRoute(
+        let resolved = try await resolveConfiguration(
             environment: environment,
             fileManager: fileManager,
             homeDirectory: homeDirectory
@@ -163,20 +259,14 @@ struct KuzioCoworkRuntimeProfile {
             throw KuzioCoworkRuntimeError.sessionStorageUnavailable
         }
 
-        return Prepared(
+        return try Prepared(
             sessionID: sessionID,
-            configuration: CodexRuntimeConfiguration(
-                sessionID: sessionID,
-                mode: .cowork,
-                workspaceURL: workspaceURL,
-                runtimeRootURL: runtimeRootURL,
-                route: route,
-                approvalReviewer: .automatic,
-                reasoningEffort: route.reasoningEffort,
-                dynamicTools: dynamicTools,
-                pauseActiveGoalBeforeResume: true,
-                hostApplicationIdentity: applicationIdentity
-            )
+            inferenceProfiles: resolved.profiles,
+            selectedInferenceBinding: resolved.selectedBinding,
+            workspaceURL: workspaceURL,
+            runtimeRootURL: runtimeRootURL,
+            dynamicTools: dynamicTools,
+            applicationIdentity: applicationIdentity
         )
     }
 
@@ -185,6 +275,18 @@ struct KuzioCoworkRuntimeProfile {
         sourceURL: URL,
         environment: [String: String]
     ) async throws -> ResponsesRuntimeRoute {
+        try await resolveConfiguration(
+            configurationData: configurationData,
+            sourceURL: sourceURL,
+            environment: environment
+        ).selectedProfile.route
+    }
+
+    static func resolveConfiguration(
+        configurationData: Data,
+        sourceURL: URL,
+        environment: [String: String]
+    ) async throws -> ResolvedConfiguration {
         let imported: ImportedChatConfiguration
         do {
             imported = try ChatConfigurationImporter.parse(
@@ -216,13 +318,103 @@ struct KuzioCoworkRuntimeProfile {
                 environment: environment
             )
         )
-        do {
-            return try await registry.responsesRuntimeRoute()
-        } catch let error as KuzioCoworkRuntimeError {
-            throw error
-        } catch {
+        var profiles: [InferenceProfile] = []
+        var selectedBinding: AgentInferenceBinding?
+        for provider in imported.providers {
+            for model in provider.models {
+                let isSelected = provider.id == imported.selectedProviderID
+                    && model.id == imported.selectedModelID
+                do {
+                    let route = try await registry.responsesRuntimeRoute(
+                        for: ModelRef(
+                            endpoint: provider.id,
+                            model: ModelID(rawValue: model.id)
+                        )
+                    )
+                    let binding = try inferenceBinding(
+                        provider: provider,
+                        model: model
+                    )
+                    profiles.append(InferenceProfile(
+                        binding: binding,
+                        providerID: provider.id,
+                        providerTitle: provider.displayName,
+                        modelID: model.id,
+                        modelTitle: model.displayName,
+                        route: route
+                    ))
+                    if isSelected {
+                        selectedBinding = binding
+                    }
+                } catch let error as KuzioCoworkRuntimeError {
+                    if isSelected { throw error }
+                } catch {
+                    if isSelected {
+                        throw KuzioCoworkRuntimeError
+                            .unsupportedConfiguration
+                    }
+                }
+            }
+        }
+        guard !profiles.isEmpty,
+              let selectedBinding else {
             throw KuzioCoworkRuntimeError.unsupportedConfiguration
         }
+        return ResolvedConfiguration(
+            profiles: profiles,
+            selectedBinding: selectedBinding
+        )
+    }
+
+    private static func inferenceBinding(
+        provider: ImportedChatConfiguration.Provider,
+        model: ImportedChatConfiguration.Model
+    ) throws -> AgentInferenceBinding {
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = [.sortedKeys, .withoutEscapingSlashes]
+        let endpointData = try encoder.encode(provider.endpoint)
+        let connectionIdentity = digest(Data(provider.id.utf8))
+        let connectionRevision = digest(endpointData)
+        let profileIdentity = digest(Data(
+            [provider.id, model.id].joined(separator: "\u{001F}").utf8
+        ))
+        let profileRevision = digest(Data(
+            [connectionRevision, model.id].joined(separator: "\u{001F}").utf8
+        ))
+        let fingerprint = digest(Data(
+            [
+                connectionIdentity,
+                connectionRevision,
+                profileIdentity,
+                profileRevision,
+                model.id,
+            ].joined(separator: "\u{001F}").utf8
+        ))
+        return AgentInferenceBinding(
+            inferenceProfileRef: InferenceProfileRef(
+                inferenceProfileID: InferenceProfileID(
+                    rawValue: "kuzio-profile-\(profileIdentity.prefix(32))"
+                ),
+                inferenceProfileRevision: InferenceProfileRevision(
+                    rawValue: "sha256-\(profileRevision)"
+                )
+            ),
+            inferenceConnectionID: InferenceConnectionID(
+                rawValue: "kuzio-connection-\(connectionIdentity.prefix(32))"
+            ),
+            inferenceConnectionRevision: InferenceConnectionRevision(
+                rawValue: "sha256-\(connectionRevision)"
+            ),
+            modelID: ModelID(rawValue: model.id),
+            safeRouteLabel: nil,
+            trustDomain: "kuzio-configured-provider",
+            egressClassification: "user-configured-external",
+            immutableDefinitionFingerprint: fingerprint
+        )
+    }
+
+    private static func digest(_ data: Data) -> String {
+        SHA256.hash(data: data).map { String(format: "%02x", $0) }.joined()
     }
 
     static func instructions(
@@ -253,15 +445,15 @@ struct KuzioCoworkRuntimeProfile {
 
         \(contextJSON)
 
-        Use the registered `library_get_state`, `library_list_children`, and `library_read_content` tools to ground answers in Kuzio's authoritative virtual hierarchy and linked content. Start from the selected `nodeID`; do not infer a filesystem path from its title or virtual path. The Kuzio tools in this session are read-only. Do not modify the library, external targets, bookmarks, or managed package files, and do not recreate a failed or unavailable Kuzio tool with shell, Python, MCP, path scanning, or another backend.
+        Use the registered Kuzio tools to ground every decision in the authoritative virtual hierarchy and linked content. Start from the selected `nodeID`; do not infer a filesystem path from its title or virtual path. Each tool performs one minimal operation. For structural changes, issue one registered mutation tool call per operation, carry forward the latest revision returned by reads or successful mutations, and re-read before deciding again after `revision_conflict`. Kuzio structure mutations change only the virtual library. Never modify external targets, bookmarks, locators, or managed package files directly, and do not recreate a failed or unavailable Kuzio tool with shell, Python, MCP, path scanning, or another backend.
         """
     }
 
-    private static func resolveRoute(
+    private static func resolveConfiguration(
         environment: [String: String],
         fileManager: FileManager,
         homeDirectory: URL
-    ) async throws -> ResponsesRuntimeRoute {
+    ) async throws -> ResolvedConfiguration {
         let sourceURL = try configurationURL(
             environment: environment,
             fileManager: fileManager,
@@ -290,7 +482,7 @@ struct KuzioCoworkRuntimeProfile {
         } catch {
             throw KuzioCoworkRuntimeError.unsafeConfiguration
         }
-        return try await resolveRoute(
+        return try await resolveConfiguration(
             configurationData: data,
             sourceURL: sourceURL,
             environment: environment

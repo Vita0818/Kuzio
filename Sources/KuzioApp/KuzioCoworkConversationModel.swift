@@ -2,6 +2,7 @@ import Foundation
 import IntatisCodexRuntime
 import IntatisConversation
 import IntatisCore
+import IntatisCoworkUI
 import IntatisProtocol
 import IntatisSharedUI
 import Observation
@@ -34,6 +35,9 @@ final class KuzioCoworkHarnessHostModel {
     private(set) var isRunning = false
     private(set) var errorMessage: String?
     private(set) var goal: CoworkGoalCardInfo?
+    private(set) var inferenceProfiles:
+        [KuzioCoworkRuntimeProfile.InferenceProfile] = []
+    private(set) var selectedInferenceBinding: AgentInferenceBinding?
 
     private(set) var threadItemsByAgentID: [String: [CodeItem]] = [
         mainAgentKey: [],
@@ -44,6 +48,10 @@ final class KuzioCoworkHarnessHostModel {
     private(set) var activeChildThreadIDs: Set<String> = []
 
     @ObservationIgnored private var runtime: CodexAppServerSession?
+    @ObservationIgnored private var preparedProfile:
+        KuzioCoworkRuntimeProfile.Prepared?
+    @ObservationIgnored private var runtimeInferenceBinding:
+        AgentInferenceBinding?
     @ObservationIgnored private var eventTask: Task<Void, Never>?
     @ObservationIgnored private var rootThreadID: String?
     @ObservationIgnored private var threadIDByAgentID: [String: String] = [:]
@@ -53,6 +61,11 @@ final class KuzioCoworkHarnessHostModel {
     private var projectionRevision: UInt64 = 0
     @ObservationIgnored private let projectionGeneration = UUID()
     @ObservationIgnored private var selectionLoadID: UUID?
+    @ObservationIgnored private var threadUpdateContinuations:
+        [UUID: (
+            agentID: AgentID,
+            continuation: AsyncStream<CoworkAgentThreadUpdate>.Continuation
+        )] = [:]
 
     private(set) var modelName = "current model"
 
@@ -64,9 +77,51 @@ final class KuzioCoworkHarnessHostModel {
         sessionID?.rawValue ?? target.requestID.uuidString.lowercased()
     }
 
+    var presentationSessionIdentity: SessionID {
+        SessionID(rawValue: presentationSessionID)
+    }
+
+    var inferenceOptions: [IntatisCoworkInferenceOption] {
+        inferenceProfiles.map {
+            IntatisCoworkInferenceOption(
+                binding: $0.binding,
+                providerID: $0.providerID,
+                providerTitle: $0.providerTitle,
+                modelID: $0.modelID,
+                modelTitle: $0.modelTitle
+            )
+        }
+    }
+
+    var threadSource: IntatisCoworkThreadSource {
+        IntatisCoworkThreadSource(
+            loadSnapshot: { [weak self] agentID in
+                guard let self else {
+                    return .empty(agentID: agentID)
+                }
+                return self.threadSnapshot(for: agentID)
+            },
+            updates: { [weak self] agentID in
+                guard let self else {
+                    return AsyncStream { $0.finish() }
+                }
+                return self.threadUpdates(for: agentID)
+            }
+        )
+    }
+
     var threadSnapshot: CoworkAgentThreadSnapshot {
         let key = agents.contains(where: { $0.id == selectedAgentID })
             ? selectedAgentID
+            : Self.mainAgentKey
+        return threadSnapshot(for: AgentID(rawValue: key))
+    }
+
+    func threadSnapshot(
+        for agentID: AgentID
+    ) -> CoworkAgentThreadSnapshot {
+        let key = agents.contains(where: { $0.id == agentID.rawValue })
+            ? agentID.rawValue
             : Self.mainAgentKey
         return CoworkAgentThreadSnapshot(
             agentID: AgentID(rawValue: key),
@@ -77,13 +132,30 @@ final class KuzioCoworkHarnessHostModel {
         )
     }
 
+    func threadUpdates(
+        for agentID: AgentID
+    ) -> AsyncStream<CoworkAgentThreadUpdate> {
+        let id = UUID()
+        let (stream, continuation) =
+            AsyncStream<CoworkAgentThreadUpdate>.makeStream(
+                bufferingPolicy: .bufferingNewest(1)
+            )
+        threadUpdateContinuations[id] = (agentID, continuation)
+        continuation.onTermination = { [weak self] _ in
+            Task { @MainActor in
+                self?.threadUpdateContinuations[id] = nil
+            }
+        }
+        return stream
+    }
+
     var agents: [CoworkAgentInfo] {
         var result = [CoworkAgentInfo(
             id: Self.mainAgentKey,
             name: Self.mainAgentKey,
             workspace: virtualPath,
             model: modelName,
-            permissionProfile: "read-only",
+            permissionProfile: "reviewed",
             inferenceProfileLabel: modelName,
             inferenceResolution: .resolved,
             status: mainStatus,
@@ -111,7 +183,7 @@ final class KuzioCoworkHarnessHostModel {
                 name: descriptor?.displayName ?? fallbackChildName(threadID),
                 workspace: virtualPath,
                 model: childModel,
-                permissionProfile: "read-only",
+                permissionProfile: "reviewed",
                 inferenceProfileLabel: childModel,
                 inferenceResolution: .resolved,
                 status: activeChildThreadIDs.contains(threadID)
@@ -150,7 +222,7 @@ final class KuzioCoworkHarnessHostModel {
             sessionID: presentationSessionID,
             mainAgentName: Self.mainAgentKey,
             defaultModel: modelName,
-            defaultPermission: "read-only",
+            defaultPermission: "reviewed",
             tokenBudget: goal?.tokenBudget.map { "\($0) tokens" },
             workspaces: [
                 CoworkWorkspaceInfo(
@@ -158,7 +230,7 @@ final class KuzioCoworkHarnessHostModel {
                     displayName: virtualPath,
                     agentName: Self.mainAgentKey,
                     isPrimary: true,
-                    access: "read_only",
+                    access: "read_write",
                     canRemove: false
                 ),
             ]
@@ -201,39 +273,21 @@ final class KuzioCoworkHarnessHostModel {
         errorMessage = nil
 
         do {
-            let libraryTools = try library.makeReadOnlyCodexLibraryTools()
+            let libraryTools = try library.makeCoworkCodexLibraryTools()
             let dynamicTools = try libraryTools.dynamicTools()
             let prepared = try await KuzioCoworkRuntimeProfile.prepare(
                 target: target,
                 dynamicTools: dynamicTools
             )
-            let runtime = CodexAppServerSession(
-                configuration: prepared.configuration
-            )
-            let events = await runtime.events()
-            self.runtime = runtime
+            preparedProfile = prepared
             sessionID = prepared.sessionID
-            modelName = prepared.configuration.route.model.rawValue
-            eventTask = Task { @MainActor [weak self] in
-                for await event in events {
-                    guard !Task.isCancelled else { return }
-                    self?.handle(event)
-                }
-            }
-
-            let identity = try await runtime.start()
-            rootThreadID = identity.threadID
-            do {
-                let history = try await runtime.threadHistory(
-                    threadID: identity.threadID
-                )
-                mergeHistory(history, agentKey: Self.mainAgentKey)
-            } catch {
-                errorMessage = localized(error)
-            }
-            for descriptor in await runtime.descendantThreadDescriptors() {
-                updateChildDescriptor(descriptor)
-            }
+            inferenceProfiles = prepared.inferenceProfiles
+            selectedInferenceBinding =
+                prepared.selectedInferenceBinding
+            try await startRuntime(
+                configuration: prepared.configuration,
+                binding: prepared.selectedInferenceBinding
+            )
             connectionState = .ready
         } catch {
             await stopRuntime()
@@ -244,10 +298,18 @@ final class KuzioCoworkHarnessHostModel {
 
     func send() async {
         let text = input.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard let runtime,
-              connectionState == .ready,
+        guard connectionState == .ready,
               !isRunning,
               !text.isEmpty else {
+            return
+        }
+
+        let runtime: CodexAppServerSession
+        do {
+            runtime = try await runtimeForSelectedInference()
+        } catch {
+            connectionState = .failed
+            errorMessage = localized(error)
             return
         }
 
@@ -344,6 +406,119 @@ final class KuzioCoworkHarnessHostModel {
 
     func shutdown() async {
         await stopRuntime()
+        let continuations = threadUpdateContinuations.values
+        threadUpdateContinuations.removeAll()
+        continuations.forEach { $0.continuation.finish() }
+    }
+
+    func selectInferenceProfile(
+        _ binding: AgentInferenceBinding
+    ) {
+        guard inferenceProfiles.contains(where: {
+            $0.binding == binding
+        }) else { return }
+        selectedInferenceBinding = binding
+        bumpProjection()
+    }
+
+    func pauseGoal() async {
+        await setGoalStatus("paused")
+    }
+
+    func resumeGoal() async {
+        await setGoalStatus("active")
+    }
+
+    func clearGoal() async {
+        guard let runtime else { return }
+        do {
+            try await runtime.clearGoal()
+            goal = nil
+            bumpProjection()
+        } catch {
+            errorMessage = localized(error)
+        }
+    }
+
+    private func setGoalStatus(_ status: String) async {
+        guard let runtime else { return }
+        do {
+            try await runtime.setGoalStatus(status)
+        } catch {
+            errorMessage = localized(error)
+        }
+    }
+
+    private func runtimeForSelectedInference()
+        async throws -> CodexAppServerSession
+    {
+        guard let preparedProfile,
+              let binding = selectedInferenceBinding else {
+            throw KuzioCoworkRuntimeError.unsupportedConfiguration
+        }
+        if let runtime,
+           runtimeInferenceBinding == binding {
+            return runtime
+        }
+        guard !isWorking else {
+            throw CodexRuntimeError.alreadyRunning
+        }
+        connectionState = .starting
+        await stopRuntime()
+        let configuration = try preparedProfile.configuration(
+            for: binding
+        )
+        do {
+            try await startRuntime(
+                configuration: configuration,
+                binding: binding
+            )
+            connectionState = .ready
+            return try runtimeValue()
+        } catch {
+            await stopRuntime()
+            throw error
+        }
+    }
+
+    private func runtimeValue() throws -> CodexAppServerSession {
+        guard let runtime else {
+            throw CodexRuntimeError.notStarted
+        }
+        return runtime
+    }
+
+    private func startRuntime(
+        configuration: CodexRuntimeConfiguration,
+        binding: AgentInferenceBinding
+    ) async throws {
+        let runtime = CodexAppServerSession(
+            configuration: configuration
+        )
+        let events = await runtime.events()
+        self.runtime = runtime
+        runtimeInferenceBinding = binding
+        modelName = configuration.route.model.rawValue
+        eventTask = Task { @MainActor [weak self] in
+            for await event in events {
+                guard !Task.isCancelled else { return }
+                self?.handle(event)
+            }
+        }
+
+        let identity = try await runtime.start()
+        rootThreadID = identity.threadID
+        do {
+            let history = try await runtime.threadHistory(
+                threadID: identity.threadID
+            )
+            mergeHistory(history, agentKey: Self.mainAgentKey)
+        } catch {
+            errorMessage = localized(error)
+        }
+        for descriptor in await runtime.descendantThreadDescriptors() {
+            updateChildDescriptor(descriptor)
+        }
     }
 
     private func stopRuntime() async {
@@ -354,6 +529,7 @@ final class KuzioCoworkHarnessHostModel {
             await runtime.shutdown()
         }
         self.runtime = nil
+        runtimeInferenceBinding = nil
         if let task {
             _ = await task.result
         }
@@ -786,7 +962,8 @@ final class KuzioCoworkHarnessHostModel {
     private func goalCard(
         _ snapshot: CodexRuntimeGoalSnapshot
     ) -> CoworkGoalCardInfo {
-        CoworkGoalCardInfo(
+        let normalized = normalizedStatus(snapshot.status)
+        return CoworkGoalCardInfo(
             id: "codex-goal:\(snapshot.threadID)",
             objective: snapshot.objective,
             status: snapshot.status,
@@ -794,10 +971,12 @@ final class KuzioCoworkHarnessHostModel {
             tokensUsed: snapshot.tokensUsed,
             tokenBudget: snapshot.tokenBudget,
             revision: snapshot.updatedAt,
-            canPause: false,
-            canResume: false,
-            canEdit: false,
-            canClear: false
+            canPause: normalized == "active",
+            canResume: [
+                "paused", "blocked", "usage_limited", "budget_limited",
+            ].contains(normalized),
+            canEdit: normalized != "complete",
+            canClear: true
         )
     }
 
@@ -858,6 +1037,14 @@ final class KuzioCoworkHarnessHostModel {
 
     private func bumpProjection() {
         projectionRevision &+= 1
+        let throughSeq = Int(clamping: projectionRevision)
+        for entry in threadUpdateContinuations.values {
+            entry.continuation.yield(CoworkAgentThreadUpdate(
+                agentID: entry.agentID,
+                throughSeq: throughSeq,
+                revision: projectionRevision
+            ))
+        }
     }
 
     private func localized(_ error: Error) -> String {

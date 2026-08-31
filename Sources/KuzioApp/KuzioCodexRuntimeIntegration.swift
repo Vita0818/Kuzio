@@ -1,4 +1,5 @@
 import IntatisCore
+import IntatisCoworkUI
 import IntatisProtocol
 import IntatisProviders
 import IntatisCodexRuntime
@@ -25,6 +26,11 @@ enum KuzioCodexRuntimeIntegration {
             CodexRuntimeHostContract.publicAPIMajorVersion
                 == requiredPublicAPIMajorVersion,
             "Kuzio requires IntatisCodexRuntime host API v1."
+        )
+        precondition(
+            IntatisCoworkUIContract.publicAPIMajorVersion
+                == requiredPublicAPIMajorVersion,
+            "Kuzio requires IntatisCoworkUI API v1."
         )
     }
 }

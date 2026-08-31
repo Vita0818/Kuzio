@@ -56,9 +56,13 @@ struct LibraryBrowserPage: View {
         library.searchText.trimmingCharacters(in: .whitespacesAndNewlines)
     }
 
+    private var pageTitle: String {
+        library.currentFolder?.title ?? "资料库"
+    }
+
     var body: some View {
         VStack(alignment: .leading, spacing: layout.rootSpacing) {
-            Text("资料库")
+            Text(pageTitle)
                 .font(IntatisTypography.largeTitle(32, .bold))
                 .lineLimit(1)
 
@@ -285,6 +289,7 @@ struct LibraryBrowserPage: View {
                                 ) {
                                     Task { await library.openEntry(resourceLink.id) }
                                 }
+                                .help(resourceLink.title)
                                 .contextMenu {
                                     entryContextMenu(resourceLink)
                                 }
@@ -430,6 +435,7 @@ private struct LibraryGridItemTile: View {
                     .font(IntatisTypography.body(14, .bold))
                     .multilineTextAlignment(.center)
                     .lineLimit(2)
+                    .truncationMode(entry.isResourceLink ? .middle : .tail)
                     .frame(maxWidth: .infinity)
                     .frame(
                         height: KuzioControlMetrics.gridTileTitleHeight,

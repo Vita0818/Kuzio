@@ -333,7 +333,7 @@ final class LibraryViewModel {
         snapshot?.folderDestinations(excluding: id) ?? []
     }
 
-    func makeReadOnlyCodexLibraryTools() throws -> KuzioCodexLibraryTools {
+    func makeCoworkCodexLibraryTools() throws -> KuzioCodexLibraryTools {
         guard let store else {
             throw KuzioCoworkRuntimeError.libraryUnavailable
         }

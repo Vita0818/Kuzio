@@ -3,6 +3,8 @@ import IntatisCodexRuntime
 import IntatisProtocol
 
 struct KuzioCodexLibraryTools: Sendable {
+    static let toolsetID = "com.vitemis.kuzio.library-tools.cowork.v2"
+
     private let provider: LibraryToolProvider
 
     init(store: LibraryStore) {
@@ -11,6 +13,7 @@ struct KuzioCodexLibraryTools: Sendable {
             authorization: LibraryToolAuthorization(capabilities: [
                 .readStructure,
                 .readContent,
+                .mutateStructure,
             ])
         )
     }
@@ -32,7 +35,7 @@ struct KuzioCodexLibraryTools: Sendable {
         }
         let bridge = self
         return CodexRuntimeDynamicTools(
-            toolsetID: LibraryToolProvider.providerID,
+            toolsetID: Self.toolsetID,
             specs: specs,
             handler: { call in
                 await bridge.execute(

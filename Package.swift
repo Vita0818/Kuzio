@@ -21,6 +21,7 @@ let package = Package(
                 .product(name: "IntatisProviders", package: "Intatis"),
                 .product(name: "IntatisConversation", package: "Intatis"),
                 .product(name: "IntatisCodexRuntime", package: "Intatis"),
+                .product(name: "IntatisCoworkUI", package: "Intatis"),
                 .product(name: "IntatisSharedUI", package: "Intatis"),
             ],
             path: "Sources/KuzioApp",

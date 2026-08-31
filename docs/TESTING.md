@@ -1,9 +1,14 @@
 # TESTING
 
-最近自查日期：2026-08-28
+最近自查日期：2026-08-31
 
 ## 当前验证状态
 
+- 2026-08-31 presentation-only `IntatisCoworkUI`接入已运行SwiftPM graph、`swift build --disable-automatic-resolution`、43-test `swift test --disable-automatic-resolution`、XcodeGen 2.45.4、Xcode Debug与全新universal Release App build，全部通过、0 failures。测试锁定Runtime/UI public API v1、七个direct products、多个fixture model→secret-free inference options、切换route仍保持同一session/workspace/runtime root与`com.vitemis.kuzio.library-tools.cowork.v2`完整8-tool surface，以及Kuzio Harness不再直接组装`CoworkShell`、自制model menu或xmark。Light/Dark隔离Debug窗口AX与截图确认`cowork.harness.intatis-cowork-ui`、完整Intatis右侧、当前配置的多provider/model菜单、选择标签更新、未发送composer ready、无额外叉号；target由“数学”替换为“计算机科学”后只有一个当前Debug App Server，关闭窗口后Kuzio App Server全部drain。
+- 同轮Release为`0.5` / build `2`、arm64/x86_64 universal；两个nested Codex分别使用与旧安装版相同的Developer ID、hardened runtime、secure timestamp签名，刷新manifest/SHA inventory后签outer App。三份strict signature、两架构`validate-codex-runtime.sh`、outer seal、fresh/staging/installed executable equality、SharedUI两项variable font checksum、OFL与旧静态字体排除均通过。`~/Applications/Kuzio.app`已更新；production root、真实`Syllabus.md`外部链接、`UCB-CS61A` Intatis UI/model menu/composer ready和window-close process drain通过，随后App留在资料库首页。production revision 17、578 nodes、457 resources与manifest SHA-256全程不变。未发送模型turn，因此切换模型后的真实远端请求、model-driven dynamic tool callback、child与逐工具approval仍未验证。
+- 2026-08-30 v0.5（build 1）已运行 SwiftPM graph、`swift build`、`swift test`、XcodeGen 2.45.4、Xcode Debug 与独立 DerivedData 的全新 universal Release build：43 tests / 0 failures。Release bundle identifier `com.Vita0818.Kuzio`、arm64/x86_64、SharedUI 两个 variable TTF checksum、Kuzio OFL 与旧静态字体排除均通过。两架构 nested Codex 分别使用与旧安装版相同的 Developer ID Application、hardened runtime、secure timestamp 签名；刷新两份 runtime manifest/SHA inventory 后签 outer App，三份 strict signature、outer seal、两个 `validate-codex-runtime.sh` static validation 与 installed/fresh executable equality 均通过。`~/Applications/Kuzio.app` 已原子更新；正式路径启动后 root/动态文件夹标题、真实 PDF 系统打开、Notes Cowork composer ready、未发送草稿关闭和 runtime drain 通过。production revision 17、578 nodes、457 resources 与 manifest SHA-256 `a045…f703` 全程不变。未发送模型 turn，model-driven mutation callback 与逐工具 approval 未验证。
+- 2026-08-30 Cowork mutation tool registration 已运行 `swift build`、`swift test` 与 Xcode Debug App build：43 tests / 0 failures，正式 App target 编译成功；Xcode 只报告 Intatis checkout 既有 `ChatLoop.swift` unused-result warning。`KuzioCodexLibraryTools` 与实际 `CodexRuntimeDynamicTools.specs` 按固定顺序逐个包含完整 8 个最小工具，并使用不同于旧 read-only surface 的 `com.vitemis.kuzio.library-tools.cowork.v2` toolset ID；测试经同一薄 bridge 执行一次 `library_create_folder`，published revision 只增加 1。session instructions 锁定“一工具一最小操作”、使用最近 revision、`revision_conflict` 后重读及外部目标禁止写入。该轮不修改 Intatis；真实 model-driven App Server mutation callback、逐工具 approval、Light/Dark runtime window 与正式 Release/安装尚未运行。
+- 2026-08-30 browser hierarchy/title polish 已运行 `swift build`、`swift test` 与 Xcode Debug App build：43 tests / 0 failures，正式 App target 编译成功。SwiftPM 初次在沙箱内被既有 `sandbox-exec: sandbox_apply: Operation not permitted` 阻止，随后按权限流程在沙箱外成功完成。唯一临时 bundle ID、ad-hoc 签名、隔离 `-KuzioPreviewData` 的 Light Debug App 已确认 root 大标题为“资料库”，进入“数学”后大标题为“数学”，breadcrumb、Finder icons、36pt controls、sidebar 与固定 152pt grid 不变。resource-link title 的 `.middle` 与完整标题 `.help` 已由静态源码和两套 build 覆盖；Computer Use 在继续进入 production-read-only PDF 层时 native pipe 关闭，所以本轮 Dark appearance、实际中间截断截图和 hover tooltip 弹出仍标为未完成，不复用旧窗口证据冒充当前结果。
 - 2026-08-28 最新Intatis host-identity/SharedUI适配已运行`swift build`、`swift test`、XcodeGen 2.45.4与Xcode Debug App build：43 tests / 0 failures。测试锁定process-first `IntatisHostApplication.configure(name: "Kuzio")`、session frozen identity、Intatis-owned shared config、六个direct products、唯一`WindowGroup`、`HSplitView`、direct `CoworkShell`，并拒绝Harness源码中的`TextEditor`/ScrollView/confirmation dialog/Kuzio controls。编译只有Intatis checkout既有unused/deprecated warnings，Kuzio无warning/error。
 - Light/Dark最新DEBUG preview均只有一个标准窗口：启动时左学习库、右`Cowork Harness`空态且无runtime；folder“数学”的“AI对话”在同窗右栏显示dependency AX identity `cowork.harness.intatis-shared-ui`、标题、SharedUI `Give Main a project task...` composer、Send与close。只填写不发送本地草稿后Send启用，证明Intatis-owned config和Kuzio host-identity session ready；清空草稿并close后恢复空态。两轮空session已移入废纸篓，关闭后无Kuzio bundled runtime process。
 - Debug与Release App bundle都只含`Intatis_IntatisSharedUI.bundle`中的upright/italic两个variable TTF（SHA-256分别`662a…016`/`f115…3f2`）与Kuzio OFL；没有旧四静态TTF。全新Release为arm64/x86_64 universal；两个nested Codex分别用同一Developer ID、hardened runtime、secure timestamp签名，刷新manifest/SHA inventory后签outer App。三份strict signature、两架构`validate-codex-runtime.sh`与outer seal均通过。
@@ -43,7 +48,7 @@
 - 产品平台：macOS 26+。
 - SwiftPM manifest：swift-tools-version 6.2。
 - Xcode target setting：Swift 6.0，deployment target 26.0。
-- XcodeGen：2026-08-28 使用本机2.45.4根据`project.yml`重新生成`Kuzio.xcodeproj`，保留既有Development Team、bundle identifier、版本与签名设置，并加入Intatis local package、六个实际products、OFL与双架构runtime resource；generated Resources不含旧四静态TTF。
+- XcodeGen：2026-08-30 使用本机2.45.4根据`project.yml`重新生成`Kuzio.xcodeproj`，保留既有Development Team、bundle identifier与签名设置，当前 Debug/Release为`0.5` / build `2`，并保持Intatis local package、七个实际products、OFL与双架构runtime resource；generated Resources不含旧四静态TTF。
 - shared runtime 通过 `../../Intatis` 本地 SwiftPM dependency 直接编译；Kuzio 根 `Package.resolved` 锁定 Intatis manifest 的远程传递 packages。Xcode bundle 直接封装 exact Intatis runtime kit；Kuzio 没有复制 shared kernel source、引入第二 provider/runtime 或使用 PATH runtime 作为正式 App fallback。
 - 测试 fixture 不需要真实 `.env`、token、账号或 Keychain；安装版启动 route 时只通过 Intatis config 的 literal/environment/file reference 在进程内解析 credential，验证过程不读取/打印其值。
 
@@ -56,7 +61,7 @@ swift package dump-package
 swift build
 ```
 
-`dump-package`必须显示local dependency path为唯一`/Users/vita/Vitemis/Intatis` checkout，且`KuzioApp`直接依赖`IntatisCore`、`IntatisProtocol`、`IntatisProviders`、`IntatisConversation`、`IntatisCodexRuntime`、`IntatisSharedUI`六个实际products。该检查和编译不得读取或输出API credential。
+`dump-package`必须显示local dependency path为唯一`/Users/vita/Vitemis/Intatis` checkout，且`KuzioApp`直接依赖`IntatisCore`、`IntatisProtocol`、`IntatisProviders`、`IntatisConversation`、`IntatisCodexRuntime`、`IntatisCoworkUI`、`IntatisSharedUI`七个实际products。该检查和编译不得读取或输出API credential。
 
 正式 App 工程：
 
@@ -184,11 +189,11 @@ swift test
 
 新增 Cowork runtime 方向：
 
-39. `KuzioCodexLibraryTools` 只广告三个 read-only tools，并把 `library_read_content` 真实 provider success envelope 投影成 dynamic-tool result；mutation tool 不可见。
-40. Intatis-owned compatible fixture config经`ChatConfigurationImporter` / `ProviderRegistry`解析成exact Responses route，fixture credential只在内存且不会出现在route description/debugDescription。
-41. 每个test先安装`Kuzio` host identity；prepared configuration固定`.cowork`、同一`hostApplicationIdentity`、stable harness-request session identity、`pauseActiveGoalBeforeResume`、独立workspace/runtime root与selected `NodeID` instructions；instructions不含config path/credential。
+39. `KuzioCodexLibraryTools` 与 `CodexRuntimeDynamicTools.specs` 使用 `com.vitemis.kuzio.library-tools.cowork.v2` toolset ID，按固定顺序逐个广告完整 8 个最小工具，并把 `library_read_content` 与单次 `library_create_folder` 真实 provider success envelope 投影成 dynamic-tool result；没有 organize/apply-plan/batch 复合工具。
+40. Intatis-owned compatible fixture config经`ChatConfigurationImporter` / `ProviderRegistry`解析成exact Responses routes和多个secret-free inference options，fixture credential只在内存且不会出现在route description/debugDescription；选择另一个model后仍保持同一session/workspace/runtime root和同一8-tool toolset。
+41. 每个test先安装`Kuzio` host identity；Runtime/UI public API major固定v1，prepared configuration固定`.cowork`、同一`hostApplicationIdentity`、stable harness-request session identity、`pauseActiveGoalBeforeResume`、独立workspace/runtime root与selected `NodeID` instructions；instructions不含config path/credential。
 42. selected target Codable round-trip 保持 `NodeID`、kind、title、virtual path 与 request identity。
-43. 主scene只有一个`WindowGroup`；detail使用左学习库/右harness的`HSplitView`，browser/reader通过callback激活target；右栏直接`CoworkShell`且Harness host源码不含自制`TextEditor`、ScrollView、confirmation dialog或Kuzio controls，Package/XcodeGen使用相同六产品与SharedUI typography。
+43. 主scene只有一个`WindowGroup`；detail使用左学习库/右harness的`HSplitView`，browser/reader通过callback激活target；右栏直接`IntatisCoworkContentView`，Harness host源码不含`CoworkShell`、自制model menu、`IntatisThreadHeaderAction`/xmark、`TextEditor`、ScrollView、confirmation dialog或Kuzio controls，Package/XcodeGen使用相同七产品与SharedUI typography。
 
 当前没有 XCUITest；43 个 Swift tests 不等于窗口验证。单一 `+`、resource linking/relink、Cowork folder/file actions、Light/Dark 单窗口双栏 ready/shutdown、installed production root turn/stream/usage 已包含实际 App 窗口验收；dynamic tool callback、child/approval data plane、File Provider 与 accessibility 全流程仍不得描述为已覆盖。
 
@@ -240,6 +245,9 @@ rg -n '\\.buttonStyle\\(\\.glass\\)|\\.buttonBorderShape\\(\\.circle\\)|\\.contr
 
 rg -n -B 8 -A 10 'KuzioCircleIconButton\\(|kuzioCircleIconControl|Glass\\.regular\\.interactive\\(\\), in: \\.circle' \
   Sources/KuzioApp --glob '*.swift'
+
+rg -n -F -e 'pageTitle' -e '.truncationMode(entry.isResourceLink ? .middle : .tail)' -e '.help(resourceLink.title)' \
+  Sources/KuzioApp/LibraryBrowserView.swift
 ```
 
 预期：
@@ -251,6 +259,7 @@ rg -n -B 8 -A 10 'KuzioCircleIconButton\\(|kuzioCircleIconControl|Glass\\.regula
 - 每个 circle icon control 使用 15pt semibold monochrome symbol 与 8pt 同组间距；menu indicator 隐藏，label 不得再塞入 44pt frame。
 - sidebar destination row 必须解析为 13pt symbol / 20pt slot、8pt 图文间距、12×10pt padding、15pt selected glass corner；folder/resource tile 为 58×50pt Finder icon / 52pt icon slot、34pt title slot、13pt detail slot 与 152pt fixed height，document card symbol 为 21pt semibold / 42pt slot。
 - folder tile、move sheet 与 trash folder 都调用 `SystemFileIconProvider.folder()`。
+- browser title 必须来自 `library.currentFolder?.title` 并在缺失 snapshot 时只回退“资料库”；resource-link 必须命中 `.middle` 与完整标题 `.help`，folder 不得被全局改成中间截断。
 
 ## 文件系统静态检查
 
@@ -288,7 +297,7 @@ rg -n 'OpenAI|Anthropic|prompt|MCP|URLSession|rawPath|absolutePath' \
   Sources/KuzioApp/LibraryToolControlPlane.swift \
   Sources/KuzioApp/LibraryToolProvider.swift
 
-rg -n 'Intatis(Core|Protocol|Providers|Conversation|CodexRuntime|SharedUI)|publicAPIMajorVersion' \
+rg -n 'Intatis(Core|Protocol|Providers|Conversation|CodexRuntime|CoworkUI|SharedUI)|publicAPIMajorVersion' \
   Package.swift project.yml \
   Sources/KuzioApp/KuzioCodexRuntimeIntegration.swift \
   Kuzio.xcodeproj/project.pbxproj
@@ -308,17 +317,17 @@ rg -n 'WindowGroup|HSplitView|cowork\.harness\.empty|onOpenCowork' \
   Sources/KuzioApp/LibraryBrowserView.swift \
   Sources/KuzioApp/LibraryReaderView.swift
 
-rg -n 'CoworkShell\(|cowork\.harness\.intatis-shared-ui' \
+rg -n 'IntatisCoworkContentView\(|cowork\.harness\.intatis-cowork-ui' \
   Sources/KuzioApp/KuzioCoworkConversationView.swift
 
-rg -n 'TextEditor\(|ScrollView|confirmationDialog\(|KuzioCircleIconButton\(' \
+rg -n 'CoworkShell\(|IntatisThreadHeaderAction\(|systemImage: "xmark"|TextEditor\(|ScrollView|confirmationDialog\(|KuzioCircleIconButton\(' \
   Sources/KuzioApp/KuzioCoworkConversationView.swift
 
 rg -n 'OPENAI_API_KEY|sk-[A-Za-z0-9]|bearerToken\s*[:=]\s*"' \
   Sources/KuzioApp Package.swift project.yml
 ```
 
-预期：第一条源码目录、provider definitions与文档tool names完全对应；第二条无结果，证明控制面/provider仍不含runtime/transport。第三条证明SwiftPM/XcodeGen/generated project使用同一六个实际products。第四条证明入口安装Kuzio identity、session显式冻结它，而shared provider config候选由`.intatis` identity派生。第五条只出现`.cowork`与read capabilities，不出现`mutateStructure`。第六条证明App唯一`WindowGroup`、detail `HSplitView`、稳定空态和callback activation。第七条证明right pane直接mount `CoworkShell`；第八条必须无结果，证明Kuzio没有重写Harness UI。最后credential检查必须无结果。
+预期：第一条源码目录、provider definitions与文档tool names完全对应；第二条无结果，证明控制面/provider仍不含runtime/transport。第三条证明SwiftPM/XcodeGen/generated project使用同一七个实际products和Runtime/UI两个API v1 gate。第四条证明入口安装Kuzio identity、session显式冻结它，而shared provider config候选由`.intatis` identity派生。第五条必须同时出现`.cowork`、`readStructure`、`readContent` 与 `mutateStructure`，证明 Cowork 逐个注册完整 capability surface。第六条证明App唯一`WindowGroup`、detail `HSplitView`、稳定空态和callback activation。第七条证明right pane直接mount `IntatisCoworkContentView`；第八条必须无结果，证明Kuzio没有重新组装CoworkShell、model menu或关闭叉号。最后credential检查必须无结果。
 
 ## 手动窗口验收矩阵
 
@@ -339,7 +348,9 @@ open -n DerivedData/Build/Products/Debug/Kuzio.app --args -KuzioPreviewData -Kuz
 | native surfaces | sidebar/window/sheet 由系统 surface 拥有，无自定义背景 | Light/Dark 通过 |
 | Liquid Glass | 只出现 Apple 原生 glass，Light/Dark 均清晰 | 通过 |
 | arbitrary depth | 连续进入多层 folder，breadcrumb/history 正确 | root → 数学 → 概率论通过 |
+| current folder title | root 大标题保持“资料库”；进入子文件夹后 32pt 大标题同步当前 virtual folder，breadcrumb 仍显示祖先路径 | 2026-08-30 Light 隔离 preview：root“资料库”→“数学”通过；Dark 待运行 |
 | equal-size grid tiles | 短名称、两行长名称、folder detail 与 resource-link 空 detail 均不改变 glass rectangle 尺寸 | Light/Dark 隔离 preview 长短 folder 名称通过；resource-link 空 detail 由固定槽源码/构建覆盖 |
+| long resource-link title | 两行文件名中间截断以保留首尾，hover help 显示完整标题，tile 仍为 152pt | 当前源码/Swift/Xcode build 通过；本轮窗口控制在 PDF 层中断，Light/Dark 截断截图与 tooltip 弹出待运行 |
 | CRUD | create、rename、move、edit、trash、restore、delete 更新 UI | 部分通过：create document → trash → restore；rename/move/save/permanent-delete 未运行 |
 | reader | Markdown/纯文本阅读、选择、编辑、保存正常 | 部分通过：Markdown 阅读与 edit/cancel 状态通过；save 未运行 |
 | persistence | 退出重开后默认 package 内容与稳定 ID 保持 | 待运行 |
@@ -348,11 +359,12 @@ open -n DerivedData/Build/Products/Debug/Kuzio.app --args -KuzioPreviewData -Kuz
 | recursive folder link | 一次选择生成完整 virtual subtree、空目录和逐文件链接；单 transaction、无 raw path、嵌套文件可打开 | Light 结果窗口通过；Dark transaction 通过 |
 | broken/stale resource-link | moved/offline/revoked 明确失败；stale bookmark 保持 identity 并事务更新 | 源码路径已实现；真实 moved/revoked/stale fixture 待运行 |
 | explicit relink | file/folder context menu 只有一个“重新链接”；取消不 mutation；batch 一次提交、不重复 node、不改外部文件 | 安装版 165-file legacy batch、重启与嵌套文件打开通过 |
-| single-window split | App只有一个标准窗口；detail为左学习库/右harness；空态不启动runtime；激活态右栏必须是dependency CoworkShell | 最新Light/Dark DEBUG preview通过；AX出现`cowork.harness.intatis-shared-ui`，空态/激活/关闭恢复均通过 |
-| Cowork folder entry | folder context menu首项“AI对话”；同窗右栏默认`.cowork`，SharedUI composer ready | 最新Light/Dark preview“数学”填入未发送草稿后dependency Send启用；installed production须在本轮Release后重验 |
-| Cowork file entry | internal document/resource-link共用context action；reader“更多”复用；selected virtual path正确 | 既有Light preview“条件概率”路径通过；direct SharedUI host与resource-link共用同一callback源码、43-test build覆盖 |
-| Cowork tool boundary | Kuzio host identity、selected`NodeID` instructions无raw path/credential；只读三工具；关闭process drain | fixture tests通过；最新Light/Dark ready/close后无残留App Server，空session已移入废纸篓 |
-| Cowork data plane | root/child streaming、tool callback、approval、usage通过public inputs交给CoworkShell，Kuzio不渲染UI | 本轮正式安装版真实root turn在SharedUI显示user/`READY`/reasoning timestamp/7,186-token usage与`kuzio.message...` identity；tool callback、child、approval未触发 |
+| single-window split | App只有一个标准窗口；detail为左学习库/右harness；空态不启动runtime；激活态右栏必须是dependency `IntatisCoworkContentView`且无Kuzio叉号 | 本轮Light/Dark DEBUG与build 2安装版通过；AX出现`cowork.harness.intatis-cowork-ui` |
+| Cowork folder entry | folder context menu首项“AI对话”；同窗右栏默认`.cowork`，Intatis composer/model menu ready | Light/Dark“数学”和installed production `UCB-CS61A`通过：多provider/model菜单可见，选择标签更新，未发送草稿启用Send后已清空；未发送turn |
+| Cowork file entry | internal document/resource-link共用context action；reader“更多”复用；selected virtual path正确 | 既有callback源码、43-test与Xcode build覆盖；installed production真实`Syllabus.md`外部链接打开通过，file-target Cowork本轮未单独激活 |
+| Cowork model boundary | 配置只读、options secret-free；选择只改变下一次`@main`route；session/workspace/runtime root和8-tool surface不变 | 两模型fixture测试通过；Light真实菜单/标签通过；切换后远端turn未发送 |
+| Cowork tool boundary | Kuzio host identity、selected`NodeID` instructions无raw path/credential；8 个独立最小工具；reviewed/read-write session workspace；target替换/window close process drain | fixture tests确认specs/toolset ID顺序、read与单次create callback；Light target替换和window-close后无Kuzio App Server残留 |
+| Cowork data plane | root/child streaming、tool callback、approval、usage通过public state/actions/thread source交给IntatisCoworkUI，Kuzio不渲染UI | 旧installed root turn已显示user/`READY`/reasoning/usage；本轮bridge/provider mutation callback由测试覆盖、runtime ready，但未发送turn，model-driven App Server callback、child、逐工具approval未触发 |
 | source refresh / HTTPS / File Provider | 不把尚未实现的 refresh、HTTPS picker/open 或 download state 描述为可用 | 待实现 / 待运行 |
 
 无参数启动不覆盖系统 appearance，也不加载 DEBUG seed。

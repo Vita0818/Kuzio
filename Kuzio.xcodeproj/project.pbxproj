@@ -16,6 +16,7 @@
 		4540376210C6F09C53BA3E95 /* IntatisProviders in Frameworks */ = {isa = PBXBuildFile; productRef = 2A2EE29450E9FBB4319E226A /* IntatisProviders */; };
 		538755033A00A466DBE3DFE8 /* LibraryManifest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E69C2E96AEFF4A0FCFE8C1E6 /* LibraryManifest.swift */; };
 		56560D98BEBAEDB80C8E0817 /* CodexRuntime in Resources */ = {isa = PBXBuildFile; fileRef = 0CD35F49431B76B7DDFD0F88 /* CodexRuntime */; };
+		5A73C7DC8C6EC353C6D7ECF7 /* IntatisSharedUI in Frameworks */ = {isa = PBXBuildFile; productRef = B2450834880A016B3EE56806 /* IntatisSharedUI */; };
 		5F4EB9C476EA3BF056D05E3B /* KuzioControlMetrics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AFCDDE12761A69591B5E251 /* KuzioControlMetrics.swift */; };
 		65715405FBAF50DF59C9A869 /* KuzioCodexLibraryTools.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF78014762FA048654E85F38 /* KuzioCodexLibraryTools.swift */; };
 		65AAFBB4C146480F70EF52A1 /* LibraryBootstrap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A05E012F795993B64695CB1 /* LibraryBootstrap.swift */; };
@@ -34,7 +35,7 @@
 		BEB51BBEC00006A313F6DBF1 /* IntatisCore in Frameworks */ = {isa = PBXBuildFile; productRef = 9C9A1D7D3378731DEF5040AC /* IntatisCore */; };
 		D380CA0E9D31845CA14E9E5A /* LibraryStore+Mutations.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD14FAE8F013AA0F6FA089E7 /* LibraryStore+Mutations.swift */; };
 		D79DA52683FC6B1159DCA8EC /* KuzioCoworkRuntimeProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F3E6C2BB8F9FE571F295573 /* KuzioCoworkRuntimeProfile.swift */; };
-		DE08BA7DD797D04D2EC1E0CE /* IntatisSharedUI in Frameworks */ = {isa = PBXBuildFile; productRef = B2450834880A016B3EE56806 /* IntatisSharedUI */; };
+		DE08BA7DD797D04D2EC1E0CE /* IntatisCoworkUI in Frameworks */ = {isa = PBXBuildFile; productRef = 2DB1B2576E9F8DDBB0BD6A2A /* IntatisCoworkUI */; };
 		ECA92D627268E93359536B04 /* LibraryTrashView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F05A633BBFE11368DB114F55 /* LibraryTrashView.swift */; };
 		ECAADB62ADA57613C000B953 /* LibraryToolControlPlane.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC2A34630CDBD54BEDF1C965 /* LibraryToolControlPlane.swift */; };
 		EE686D35246C3CDDE34FDFF5 /* KuzioCoworkConversationModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ED91EEDE4D227969ED65277 /* KuzioCoworkConversationModel.swift */; };
@@ -88,7 +89,8 @@
 				4540376210C6F09C53BA3E95 /* IntatisProviders in Frameworks */,
 				3EBBFB487E0BA7829C83766E /* IntatisConversation in Frameworks */,
 				69366336E33E20070113E20E /* IntatisCodexRuntime in Frameworks */,
-				DE08BA7DD797D04D2EC1E0CE /* IntatisSharedUI in Frameworks */,
+				DE08BA7DD797D04D2EC1E0CE /* IntatisCoworkUI in Frameworks */,
+				5A73C7DC8C6EC353C6D7ECF7 /* IntatisSharedUI in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -243,6 +245,7 @@
 				2A2EE29450E9FBB4319E226A /* IntatisProviders */,
 				E4EB811A0452A204EF1844D7 /* IntatisConversation */,
 				A27BE0D20910DAC5EE6A53DF /* IntatisCodexRuntime */,
+				2DB1B2576E9F8DDBB0BD6A2A /* IntatisCoworkUI */,
 				B2450834880A016B3EE56806 /* IntatisSharedUI */,
 			);
 			productName = Kuzio;
@@ -390,7 +393,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -409,7 +412,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 26.0;
-				MARKETING_VERSION = 0.1;
+				MARKETING_VERSION = 0.5;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -475,7 +478,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -488,7 +491,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 26.0;
-				MARKETING_VERSION = 0.1;
+				MARKETING_VERSION = 0.5;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -537,6 +540,10 @@
 		2A2EE29450E9FBB4319E226A /* IntatisProviders */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = IntatisProviders;
+		};
+		2DB1B2576E9F8DDBB0BD6A2A /* IntatisCoworkUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = IntatisCoworkUI;
 		};
 		9C9A1D7D3378731DEF5040AC /* IntatisCore */ = {
 			isa = XCSwiftPackageProductDependency;

@@ -1,28 +1,25 @@
+import IntatisCoworkUI
 import IntatisSharedUI
 import SwiftUI
 
-/// Thin lifecycle host for IntatisSharedUI.CoworkShell.
+/// Thin lifecycle host for the presentation-only Intatis Cowork right pane.
 ///
 /// Kuzio contributes selected library context and runtime actions only. The
-/// complete Harness presentation is rendered by the dependency.
+/// complete Cowork presentation is rendered by IntatisCoworkUI.
 @MainActor
 struct KuzioCoworkHarnessHost: View {
     let library: LibraryViewModel
     let target: KuzioCoworkConversationTarget
-    let onClose: () -> Void
 
     @State private var model: KuzioCoworkHarnessHostModel
     @State private var showsInspector = false
-    @Environment(\.colorScheme) private var colorScheme
 
     init(
         library: LibraryViewModel,
-        target: KuzioCoworkConversationTarget,
-        onClose: @escaping () -> Void
+        target: KuzioCoworkConversationTarget
     ) {
         self.library = library
         self.target = target
-        self.onClose = onClose
         _model = State(initialValue: KuzioCoworkHarnessHostModel(
             target: target
         ))
@@ -31,42 +28,14 @@ struct KuzioCoworkHarnessHost: View {
     var body: some View {
         @Bindable var harness = model
 
-        CoworkShell(
-            threadSnapshot: model.threadSnapshot,
-            presentationScope: IntatisThreadPresentationScope(
-                kind: "cowork",
-                sessionID: model.presentationSessionID
-            ),
-            sessionTitle: target.title,
-            thinkingScopeID: model.presentationSessionID,
-            agents: model.agents,
-            pending: model.pendingPermission,
-            summary: model.summary,
-            project: model.projectInfo,
-            goal: model.goal,
-            errorTexts: errorTexts,
-            isWorking: model.isWorking,
-            isAcceptingSubmission: model.isAcceptingSubmission,
-            threadStyle: .standard(colorScheme),
-            splitLayout: .workspace,
-            headerActions: [closeAction],
-            showsInspector: $showsInspector,
+        IntatisCoworkContentView(
+            state: contentState,
+            threadSource: model.threadSource,
+            actions: contentActions,
             input: $harness.input,
-            onSend: {
-                Task { await model.send() }
-            },
-            onCancelCurrent: cancelAction,
-            onResolve: { action in
-                Task { await model.resolvePendingApproval(action) }
-            },
-            selectedAgentID: model.selectedAgentID,
-            isThreadSnapshotLoading: model.isThreadSnapshotLoading,
-            isRichRenderingEligible: true,
-            onSelectAgent: { agentID in
-                Task { await model.selectAgent(agentID) }
-            }
+            showsInspector: $showsInspector
         )
-        .accessibilityIdentifier("cowork.harness.intatis-shared-ui")
+        .accessibilityIdentifier("cowork.harness.intatis-cowork-ui")
         .task {
             await library.start()
             await model.start(using: library)
@@ -78,15 +47,45 @@ struct KuzioCoworkHarnessHost: View {
         }
     }
 
-    private var closeAction: IntatisThreadHeaderAction {
-        IntatisThreadHeaderAction(
-            title: "Close AI conversation",
-            systemImage: "xmark",
-            isIconOnly: true,
-            presentation: .compactSystemIcon,
-            help: "Close AI conversation",
-            accessibilityIdentifier: "cowork.harness.close",
-            action: onClose
+    private var contentState: IntatisCoworkContentState {
+        IntatisCoworkContentState(
+            sessionID: model.presentationSessionIdentity,
+            sessionTitle: target.title,
+            agents: model.agents,
+            pendingPermission: model.pendingPermission,
+            summary: model.summary,
+            project: model.projectInfo,
+            goal: model.goal,
+            errorTexts: errorTexts,
+            isWorking: model.isWorking,
+            isAcceptingSubmission: model.isAcceptingSubmission,
+            inferenceOptions: model.inferenceOptions,
+            selectedInferenceBinding:
+                model.selectedInferenceBinding
+        )
+    }
+
+    private var contentActions: IntatisCoworkContentActions {
+        IntatisCoworkContentActions(
+            onSelectInference: {
+                model.selectInferenceProfile($0)
+            },
+            onSend: {
+                Task { await model.send() }
+            },
+            onCancelCurrent: cancelAction,
+            onResolvePermission: { action in
+                Task { await model.resolvePendingApproval(action) }
+            },
+            onPauseGoal: {
+                Task { await model.pauseGoal() }
+            },
+            onResumeGoal: {
+                Task { await model.resumeGoal() }
+            },
+            onClearGoal: {
+                Task { await model.clearGoal() }
+            }
         )
     }
 
